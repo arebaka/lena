@@ -1,0 +1,16 @@
+{
+  "name": "lenabot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "arelive",
+  "license": "MIT",
+  "dependencies": {
+    "pg": "^8.6.0",
+    "serverline": "^1.5.0",
+    "telegraf": "^4.4.1"
+  }
+}
