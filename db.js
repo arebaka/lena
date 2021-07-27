@@ -268,8 +268,8 @@ class DBHelper
                 ]);
 
             coords = coords.rows[0].coords;
-            trigger.latitude  = coords[0];
-            trigger.longitude = coords[1];
+            trigger.latitude  = coords.x;
+            trigger.longitude = coords.y;
         break;
         case "poll":
             let poll = await this.pool.query(`
