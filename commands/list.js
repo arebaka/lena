@@ -33,15 +33,15 @@ module.exports = async ctx => {
         line = `${trigger.index} ${triggerTypeEmojis[trigger.type]} : `;
 
         if (trigger.action) {
-            switch (trigger.action) {
+            switch (trigger.factor) {
             case "join":
-                factor = "*заход в чат*";
+                factor = "_заход в чат_";
             break;
             case "left":
-                factor = "*выход из чата*";
+                factor = "_выход из чата_";
             break;
             default:
-                factor = "*действие*";
+                factor = "_действие_";
             break;
             }
         }

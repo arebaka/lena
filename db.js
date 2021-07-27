@@ -343,6 +343,21 @@ class DBHelper
             .concat(fullTriggers.rows.map(t => t.index));
     }
 
+    async getActionTriggers(chatId, action)
+    {
+        const triggers = await this.pool.query(`
+                select index
+                from triggers
+                where chat_id = $1
+                and action = true
+                and factor = $2
+            `, [
+                chatId, action
+            ]);
+
+        return triggers.rows.map(t => t.index);
+    }
+
     async remTrigger(chatId, index)
     {
         const trigger = await this.pool.query(`

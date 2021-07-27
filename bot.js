@@ -63,7 +63,25 @@ class Bot
             const text = ctx.message.text
                 .trim().toLowerCase().split(/\s+/g).join(' ');
 
-            let triggers = await db.findTriggers(ctx.chat.id, text);
+            const triggers = await db.findTriggers(ctx.chat.id, text);
+
+            for (let trigger of triggers) {
+                trigger = await db.getTrigger(ctx.chat.id, trigger);
+                await invoke(ctx, trigger);
+            }
+        });
+
+        this.bot.on("new_chat_members", async ctx => {
+            const triggers = await db.getActionTriggers(ctx.chat.id, "join");
+
+            for (let trigger of triggers) {
+                trigger = await db.getTrigger(ctx.chat.id, trigger);
+                await invoke(ctx, trigger);
+            }
+        });
+
+        this.bot.on("left_chat_member", async ctx => {
+            const triggers = await db.getActionTriggers(ctx.chat.id, "left");
 
             for (let trigger of triggers) {
                 trigger = await db.getTrigger(ctx.chat.id, trigger);
