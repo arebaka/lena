@@ -52,7 +52,7 @@ npm i lenabot
 ```
 
 ## Launch
-The bot required some environment variables. Here is a list of them:  
+The bot requires some environment variables. Here is a list of them:  
 `TOKEN` – bot token from @BotFather  
 `DBHOST` – host of PSQL, default `localhost`  
 `DBUSER` – user of PSQL, default your current login  

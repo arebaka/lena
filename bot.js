@@ -23,7 +23,7 @@ class Bot
 
         this.bot.use(async (ctx, next) => {
             try {
-                !ctx.user || await db.updateUser(
+                ctx.from && await db.updateUser(
                     ctx.from.id, ctx.from.username, ctx.from.first_name, ctx.from.last_name
                 );
 
