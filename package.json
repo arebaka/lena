@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "a trigger bot for Telegram chats configurable by admins",
   "main": "index.js",
+  "bin": "./start.sh",
   "scripts": {
     "start": "node index.js"
   },
@@ -31,14 +32,16 @@
     "polls"
   ],
   "files": [
+    "README.md",
+    "start.sh",
     "index.js",
     "config.js",
     "bot.js",
     "db.js",
-    "bing.js",
+    "bind.js",
     "invoke.js",
     "commands/*",
-    "greeting"
+    "i18n/*"
   ],
   "dependencies": {
     "pg": "^8.6.0",
