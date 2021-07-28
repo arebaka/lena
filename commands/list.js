@@ -1,47 +1,30 @@
 const db = require("../db");
 
-const triggerTypeEmojis = {
-    text:      "📃",
-    animation: "📹",
-    audio:     "🎧",
-    dice:      "🎲",
-    document:  "🏷️",
-    game:      "🎮",
-    invoice:   "💳",
-    location:  "🌐",
-    photo:     "🖼️",
-    poll:      "📊",
-    quiz:      "🍀",
-    sticker:   "😽",
-    video:     "🎬",
-    videonote: "🎥",
-    voice:     "🎤"
-};
-
 module.exports = async ctx => {
-    if (ctx.chat.type == "private")
-        return ctx.replyWithMarkdown("Команда доступна только в группах!");
-    if (!ctx.from.isAdmin)
-        return ctx.replyWithMarkdown("Команда доступна только админам!");
-
+    const i18n     = ctx.chat.i18n.commands.list;
     const triggers = await db.getChatTriggers(ctx.chat.id);
-    let   lines = [];
+    let   lines    = [];
     let   line;
     let   factor;
 
+    if (ctx.chat.type == "private")
+        return ctx.replyWithMarkdown(ctx.chat.i18n.errors.command_only_in_groups);
+    if (!ctx.from.isAdmin)
+        return ctx.replyWithMarkdown(ctx.chat.i18n.errors.command_only_for_admins);
+
     for (let trigger of triggers) {
-        line = `${trigger.index} ${triggerTypeEmojis[trigger.type]} : `;
+        line = `${trigger.index} ${i18n.emoji[trigger.type]} : `;
 
         if (trigger.action) {
             switch (trigger.factor) {
             case "join":
-                factor = "_заход в чат_";
+                factor = i18n.actions.join;
             break;
             case "left":
-                factor = "_выход из чата_";
+                factor = i18n.actions.left;
             break;
             default:
-                factor = "_действие_";
+                factor = i18n.actions.default;
             break;
             }
         }
@@ -61,6 +44,6 @@ module.exports = async ctx => {
 
     ctx.replyWithMarkdown(lines.length
         ? lines.join('\n')
-        : "В этом чате не задано ни одного триггера!"
+        : i18n.responses.no_triggers
     );
 };

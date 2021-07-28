@@ -63,7 +63,8 @@ class DBHelper
                 id bigint not null primary key,
                 username varchar(32) default null,
                 title varchar(255) not null,
-                last_trigger_index int not null default 0
+                last_trigger_index int not null default 0,
+                lang char(3) not null default 'eng'
             )`);
 
         try {
@@ -190,13 +191,27 @@ class DBHelper
 
     async updateChat(id, username, title)
     {
-        await this.pool.query(`
+        const lang = await this.pool.query(`
                 insert into chats (id, username, title)
                 values ($1, $2, $3)
                 on conflict (id) do update set
                 username = $2, title = $3
+                returning lang
             `, [
                 id, username, title
+            ]);
+
+        return lang.rows[0].lang;
+    }
+
+    async updateChatLang(id, lang)
+    {
+        await this.pool.query(`
+                update chats
+                set lang = $1
+                where id = $2
+            `, [
+                lang, id
             ]);
     }
 

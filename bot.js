@@ -1,13 +1,14 @@
 const path = require("path");
 const fs   = require("fs");
 
-const { Telegraf }   = require("telegraf");
+const { Telegraf, Markup } = require("telegraf");
 
 const db     = require("./db");
 const config = require("./config");
 const invoke = require("./invoke");
 
-const commands  = require("./commands");
+const commands = require("./commands");
+const i18n     = require("./i18n");
 
 
 
@@ -18,7 +19,6 @@ class Bot
     {
         this.token    = token;
         this.username = null;
-        this.greeting = fs.readFileSync(path.resolve("greeting"), "utf8");
         this.bot      = new Telegraf(this.token);
 
         this.bot.use(async (ctx, next) => {
@@ -28,28 +28,65 @@ class Bot
                 );
 
                 if (ctx.chat) {
-                    await db.updateChat(
-                        ctx.chat.id, ctx.chat.username, ctx.chat.title
+                    const lang = await db.updateChat(
+                        ctx.chat.id, ctx.chat.username,
+                        ctx.chat.title ? ctx.chat.title : ctx.chat.first_name
                     );
+                    ctx.chat.i18n = i18n[lang];
 
-                    const admins = await this.bot.telegram.getChatAdministrators(ctx.chat.id);
-
-                    if (admins) {
-                        ctx.chat.admins  = admins;
-                        ctx.from.isAdmin = admins.some(admin => admin.user.id == ctx.from.id);
+                    if (ctx.chat.type != "private") {
+                        const admins = await this.bot.telegram.getChatAdministrators(ctx.chat.id);
+                        if (admins) {
+                            ctx.chat.admins  = admins;
+                            ctx.from.isAdmin = admins.some(admin => admin.user.id == ctx.from.id);
+                        }
                     }
+                }
+                else {
+                    ctx.chat = {
+                        i18n: i18n.eng
+                    };
                 }
 
                 await next();
             }
             catch (err) {
                 console.error(err);
-                ctx.replyWithMarkdown("Что то пошло не так!");
+                ctx.replyWithMarkdown(ctx.chat.i18n ? ctx.chat.i18n.errors.default : "Что то пошло не так!");
             }
         });
 
-        this.bot.start(ctx => {
-            ctx.replyWithMarkdown(this.greeting);
+        this.bot.on("callback_query", async ctx => {
+            const query = ctx.update.callback_query;
+            const data  = query.data.split(':');
+
+            switch (data[0]) {
+            case "lang":
+                if (!ctx.from.isAdmin)
+                    return ctx.answerCbQuery(ctx.chat.i18n.errors.command_only_for_admins, true);
+                if (!i18n[data[1]])
+                    return ctx.answerCbQuery(ctx.chat.i18n.callbacks.lang.errors.no_lang, true);
+
+                await db.updateChatLang(ctx.chat.id, data[1]);
+                ctx.chat.i18n = i18n[data[1]]
+
+                ctx.editMessageText(ctx.chat.i18n.commands.start.responses.ok
+                    .replace("{{name}}",     ctx.chat.i18n.name)
+                    .replace("{{commands}}", ctx.chat.i18n.list_of_commands));
+            break;
+            default:
+                ctx.answerCbQuery(ctx.chat.i18n.errors.unknown_callback, true);
+            break;
+            }
+        });
+
+        this.bot.start(async ctx => {
+            ctx.replyWithMarkdown(
+                "Choose the language\nВыберите язык",
+                Markup.inlineKeyboard([
+                    Markup.button.callback("English", "lang:eng"),
+                    Markup.button.callback("Русский", "lang:rus")
+                ]));
         });
 
         this.bot.command("on",      commands.on);

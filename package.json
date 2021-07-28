@@ -1,13 +1,45 @@
 {
   "name": "lenabot",
   "version": "1.0.0",
-  "description": "",
+  "description": "a trigger bot for Telegram chats configurable by admins",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "author": "arelive",
+  "author": {
+    "name": "arelive",
+    "email": "me@are.moe",
+    "url": "https://are.moe"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://git.sode.su/arelive/lena"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "trigger",
+    "messages",
+    "words",
+    "images",
+    "stickers",
+    "audio",
+    "gif",
+    "video",
+    "voice",
+    "polls"
+  ],
+  "files": [
+    "index.js",
+    "config.js",
+    "bot.js",
+    "db.js",
+    "bing.js",
+    "invoke.js",
+    "commands/*",
+    "greeting"
+  ],
   "dependencies": {
     "pg": "^8.6.0",
     "serverline": "^1.5.0",
