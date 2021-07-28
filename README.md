@@ -1,14 +1,14 @@
 # LenaBot
-*Тебе надо дорожить тем, что имеешь, пусть это и достается без особого труда.*
+*Всегда ненавидела эту суку!*
 
 > A [Telegram](//telegram.org) bot who saves messages from group chats and sends them binding to triggers set by administrators.
 
 ## Commands
-`/on <text>` – create a trigger for text  
-`/on <"text">` – create a trigger for full message text  
+`/on <text>` – create a trigger on text  
+`/on <"text">` – create a trigger on full message text  
 `/off <number>` – delete the trigger by number  
-`/onjoin` – create a trigger for someone joins the chat  
-`/onleft` – create a trigger for someone lefts the chat  
+`/onjoin` – create a trigger on someone joins the chat  
+`/onleft` – create a trigger on someone lefts the chat  
 `/list` – get all active triggers  
 `/trigger <number>` – invoke active trigger by number forcibly
 
@@ -29,7 +29,7 @@
 ## TLDR
 1. Create and setup a bot via [@BotFather](//t.me/BotFather)
 2. Install [PostgreSQL](//www.postgresql.org/download/) if you didnt
-3. Create an empty database 'lena' in PSQL 'stalkee' owned to your user
+3. Create an empty database 'lena' in PSQL owned to your user
 4. Install [npm](//www.npmjs.com) & [node.js](//npmjs.com/package/node)
 5. `npm i lenabot`
 6. `export TOKEN=<TOKEN_FROM_BOTFATHER>`
