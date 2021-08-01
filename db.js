@@ -89,6 +89,17 @@ class DBHelper
             )`);
 
         await this.pool.query(`
+            create table if not exists entities (
+                id bigserial not null primary key,
+                trigger_id bigint not null
+                    references triggers (id)
+                    on delete cascade on update cascade,
+                type varchar(16) not null,
+                "offset" int not null,
+                length int not null
+            )`);
+
+        await this.pool.query(`
             create table if not exists text_triggers (
                 id bigserial not null primary key,
                 trigger_id bigint not null
@@ -312,7 +323,16 @@ class DBHelper
         break;
         }
 
-        trigger.id = undefined;
+        const entities = await this.pool.query(`
+                select type, "offset", length
+                from entities
+                where trigger_id = $1
+            `, [
+                trigger.id
+            ]);
+
+        trigger.id       = undefined;
+        trigger.entities = entities.rows;
 
         return trigger;
     }
@@ -385,6 +405,18 @@ class DBHelper
             ]);
 
         return trigger.rows[0];
+    }
+
+    async addEntities(triggerId, entities)
+    {
+        for (let entity of entities) {
+            await this.pool.query(`
+                    insert into entities (trigger_id, type, "offset", length)
+                    values ($1, $2, $3, $4)
+                `, [
+                    triggerId, entity.type, entity.offset, entity.length
+                ]);
+        }
     }
 
     async addTextTrigger(chatId, action, factor, fullFactor, text)

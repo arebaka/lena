@@ -66,5 +66,9 @@ module.exports = async (mess, action, factor, fullFactor=false) => {
         );
     }
 
+    if (mess.entities && mess.entities.length) {
+        await db.addEntities(trigger.id, mess.entities);
+    }
+
     return trigger;
 };

@@ -35,11 +35,12 @@ class Bot
                     ctx.chat.i18n = i18n[lang];
 
                     if (ctx.chat.type != "private") {
-                        const admins = await this.bot.telegram.getChatAdministrators(ctx.chat.id);
-                        if (admins) {
-                            ctx.chat.admins  = admins;
-                            ctx.from.isAdmin = admins.some(admin => admin.user.id == ctx.from.id);
-                        }
+                        await this.bot.telegram.getChatAdministrators(ctx.chat.id)
+                            .then(admins => {
+                                ctx.chat.admins  = admins;
+                                ctx.from.isAdmin = admins.some(admin => admin.user.id == ctx.from.id);
+                            })
+                            .catch(err => {});
                     }
                 }
                 else {
