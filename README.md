@@ -33,11 +33,10 @@
 4. Install [npm](//www.npmjs.com) & [node.js](//npmjs.com/package/node)
 5. `npm i lenabot`
 6. `export TOKEN=<TOKEN_FROM_BOTFATHER>`
-7. `export DBPASSWORD=<YOUR_PSQL_PASSWORD>`
-8. `export DBDATABASE=lena`
-9. `npx lenabot`
-10. Add your bot to a group chat and add triggers with commands above replying the messages to be resend
-11. To stop the bot type to console with it `stop` and press enter
+7. `export DBURI=postgres://localhost/lena`
+8. `npx lenabot`
+9. Add your bot to a group chat and add triggers with commands above replying the messages to be resend
+10. To stop the bot type to console with it `stop` and press enter
 
 ## Preparing
 1. Create your bot via [@BotFather](//t.me/BotFather), it will guide you on that
@@ -54,11 +53,7 @@ npm i lenabot
 ## Launch
 The bot requires some environment variables. Here is a list of them:  
 `TOKEN` – bot token from @BotFather  
-`DBHOST` – host of PSQL, default `localhost`  
-`DBUSER` – user of PSQL, default your current login  
-`DBPASSWORD` – password of the PSQL user, default undefined  
-`DBDATABASE` – name of the database for the bot in PSQL  
-`DBPORT` – port for connecting to PSQL, default `5432` (standart)
+`DBURI` – URI-string for connection to PSQL in format `postgres://<USER>:<PASSWORD>@<HOST>/<DATABASE>:<PORT>`
 
 After setup the environment run
 ```bash
@@ -67,7 +62,7 @@ npx lenabot
 
 If everything went well, you will see something like this in the console:
 ```
-> lenabot@1.0.0 start
+> lenabot@1.2.0 start
 > node index.js
 
 Bot @eslenabot started.

@@ -1,21 +1,23 @@
 {
   "name": "lenabot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "a trigger bot for Telegram chats configurable by admins",
-  "main": "index.js",
   "bin": "./start.sh",
+  "main": "index.js",
+  "homepage": "https://t.me/stalkeeBot",
   "scripts": {
+    "test": "echo no tests...",
     "start": "node index.js"
   },
-  "author": {
-    "name": "arelive",
-    "email": "me@are.moe",
-    "url": "https://are.moe"
+  "bugs": {
+    "url": "https://github.com/arebaka/stalkee/issues"
   },
+  "author": "arelive <me@are.moe> (https://are.moe)",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://git.sode.su/arelive/lena"
+  "repository": "github:arebaka/lena",
+  "funding": {
+    "type" : "patreon",
+    "url" : "https://www.patreon.com/arelive"
   },
   "keywords": [
     "telegram",
@@ -32,12 +34,14 @@
     "polls"
   ],
   "files": [
+    "LICENSE",
     "README.md",
     "start.sh",
     "index.js",
     "config.js",
     "bot.js",
-    "db.js",
+    "db/index.js",
+    "db/init.sql",
     "bind.js",
     "invoke.js",
     "commands/*",

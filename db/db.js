@@ -1,6 +1,8 @@
-const pg = require("pg");
+const path = require("path");
+const fs   = require("fs");
+const pg   = require("pg");
 
-const config = require("./config");
+const config = require("../config");
 
 
 
@@ -13,9 +15,7 @@ class DBHelper
                 update chats set last_trigger_index = last_trigger_index + 1
                 where id = $1
                 returning last_trigger_index
-            `, [
-                chatId
-            ]);
+            `, [chatId]);
 
         const trigger = await this.pool.query(`
                 insert into triggers (chat_id, index, type, action, factor, full_factor)
@@ -35,13 +35,10 @@ class DBHelper
 
     async start()
     {
+        const sql = fs.readFileSync(path.resolve("db/init.sql"), "utf8").split(';');
         this.pool = new pg.Pool({
-            host:     config.db.host,
-            user:     config.db.user,
-            password: config.db.password,
-            database: config.db.database,
-            port:     config.db.port,
-            max:      1
+            connectionString: config.dbUri,
+            max:              1
         });
 
         this.pool.on("error", async (err, client) => {
@@ -50,131 +47,10 @@ class DBHelper
             process.exit(-1);
         });
 
-        await this.pool.query(`
-            create table if not exists users (
-                id bigint not null primary key,
-                username varchar(32) default null,
-                first_name varchar(256) not null,
-                last_name varchar(256) default null
-            )`);
-
-        await this.pool.query(`
-            create table if not exists chats (
-                id bigint not null primary key,
-                username varchar(32) default null,
-                title varchar(255) not null,
-                last_trigger_index int not null default 0,
-                lang char(3) not null default 'eng'
-            )`);
-
-        try {
-            await this.pool.query(`
-                create type mess_type as enum (
-                    'text', 'animation', 'audio', 'dice', 'document', 'game', 'invoice', 'location', 'photo', 'poll', 'quiz', 'sticker', 'video', 'videonote', 'voice'
-                )`);
+        for (let query of sql) {
+            await this.pool.query(query)
+                .catch(err => {});
         }
-        catch (err) {}
-
-        await this.pool.query(`
-            create table if not exists triggers (
-                id bigserial not null primary key,
-                chat_id bigint not null
-                    references chats (id)
-                    on delete cascade on update cascade,
-                index int not null,
-                type mess_type not null,
-                action boolean not null default false,
-                factor varchar(255) not null,
-                full_factor boolean not null
-            )`);
-
-        await this.pool.query(`
-            create table if not exists entities (
-                id bigserial not null primary key,
-                trigger_id bigint not null
-                    references triggers (id)
-                    on delete cascade on update cascade,
-                type varchar(16) not null,
-                "offset" int not null,
-                length int not null
-            )`);
-
-        await this.pool.query(`
-            create table if not exists text_triggers (
-                id bigserial not null primary key,
-                trigger_id bigint not null
-                    references triggers (id)
-                    on delete cascade on update cascade,
-                text text not null
-            )`);
-
-        await this.pool.query(`
-            create table if not exists dice_triggers (
-                id bigserial not null primary key,
-                trigger_id bigint not null
-                    references triggers (id)
-                    on delete cascade on update cascade,
-                emoji varchar(32) not null
-            )`);
-
-        await this.pool.query(`
-            create table if not exists location_triggers (
-                id bigserial not null primary key,
-                trigger_id bigint not null
-                    references triggers (id)
-                    on delete cascade on update cascade,
-                coords point not null
-            )`);
-
-        await this.pool.query(`
-            create table if not exists file_triggers (
-                id bigserial not null primary key,
-                trigger_id bigint not null
-                    references triggers (id)
-                    on delete cascade on update cascade,
-                fileid varchar(255) not null,
-                caption text default null
-            )`);
-
-        await this.pool.query(`
-            create table if not exists game_triggers (
-                id bigserial not null primary key,
-                trigger_id bigint not null
-                    references triggers (id)
-                    on delete cascade on update cascade,
-                name varchar(255) not null
-            )`);
-
-        try {
-            await this.pool.query(`
-                create type poll_type as enum (
-                    'regular', 'quiz'
-                )`);
-        }
-        catch (err) {}
-
-        await this.pool.query(`
-            create table if not exists poll_triggers (
-                id bigserial not null primary key,
-                trigger_id bigint not null
-                    references triggers (id)
-                    on delete cascade on update cascade,
-                type poll_type not null default 'regular',
-                question varchar(255) not null,
-                anon boolean not null default false,
-                multiple_answers boolean not null default false,
-                correct_option_index int default null,
-                explanation varchar(255) default null
-            )`);
-
-        await this.pool.query(`
-            create table if not exists poll_options (
-                id bigserial not null primary key,
-                poll_id bigint not null
-                    references poll_triggers (id)
-                    on delete cascade on update cascade,
-                text varchar(255)
-            )`);
     }
 
     async stop()
@@ -193,8 +69,8 @@ class DBHelper
         await this.pool.query(`
                 insert into users (id, username, first_name, last_name)
                 values ($1, $2, $3, $4)
-                on conflict (id) do update set
-                username = $2, first_name = $3, last_name = $4
+                on conflict (id) do update
+                set username = $2, first_name = $3, last_name = $4
             `, [
                 id, username, firstName, lastName
             ]);
@@ -205,8 +81,8 @@ class DBHelper
         const lang = await this.pool.query(`
                 insert into chats (id, username, title)
                 values ($1, $2, $3)
-                on conflict (id) do update set
-                username = $2, title = $3
+                on conflict (id) do update
+                set username = $2, title = $3
                 returning lang
             `, [
                 id, username, title
@@ -247,9 +123,7 @@ class DBHelper
                     select text
                     from text_triggers
                     where trigger_id = $1
-                `, [
-                    trigger.id
-                ]);
+                `, [trigger.id]);
 
             trigger.text = text.rows[0].text;
         break;
@@ -265,9 +139,7 @@ class DBHelper
                     select fileid, caption
                     from file_triggers
                     where trigger_id = $1
-                `, [
-                    trigger.id
-                ]);
+                `, [trigger.id]);
 
             file = file.rows[0];
             trigger.fileid  = file.fileid;
@@ -278,9 +150,7 @@ class DBHelper
                     select emoji
                     from dice_triggers
                     where trigger_id = $1
-                `, [
-                    trigger.id
-                ]);
+                `, [trigger.id]);
 
             trigger.emoji = dice.rows[0].emoji;
         break;
@@ -289,9 +159,7 @@ class DBHelper
                     select coords
                     from location_triggers
                     where trigger_id = $1
-                `, [
-                    trigger.id
-                ]);
+                `, [trigger.id]);
 
             coords = coords.rows[0].coords;
             trigger.latitude  = coords.x;
@@ -302,9 +170,7 @@ class DBHelper
                     select id, question, anon, multiple_answers
                     from poll_triggers
                     where trigger_id = $1
-                `, [
-                    trigger.id
-                ]);
+                `, [trigger.id]);
 
             poll = poll.rows[0];
             trigger.question        = poll.question;
@@ -315,9 +181,7 @@ class DBHelper
                     select text
                     from poll_options
                     where poll_id = $1
-                `, [
-                    poll.id
-                ]);
+                `, [poll.id]);
 
             trigger.options = options.rows.map(o => o.text);
         break;
@@ -327,9 +191,7 @@ class DBHelper
                 select type, "offset", length
                 from entities
                 where trigger_id = $1
-            `, [
-                trigger.id
-            ]);
+            `, [trigger.id]);
 
         trigger.id       = undefined;
         trigger.entities = entities.rows;
@@ -343,9 +205,7 @@ class DBHelper
                 select index, type, action, factor, full_factor
                 from triggers
                 where chat_id = $1
-            `, [
-                chatId
-            ]);
+            `, [chatId]);
 
         return triggers.rows;
     }
