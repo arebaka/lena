@@ -1,16 +1,16 @@
 {
   "name": "lenabot",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "a trigger bot for Telegram chats configurable by admins",
   "bin": "./start.sh",
   "main": "index.js",
-  "homepage": "https://t.me/stalkeeBot",
+  "homepage": "https://t.me/eslenabot",
   "scripts": {
     "test": "echo no tests...",
     "start": "node index.js"
   },
   "bugs": {
-    "url": "https://github.com/arebaka/stalkee/issues"
+    "url": "https://github.com/arebaka/lena/issues"
   },
   "author": "arelive <me@are.moe> (https://are.moe)",
   "license": "MIT",
