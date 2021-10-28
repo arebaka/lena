@@ -16,8 +16,8 @@
   "license": "MIT",
   "repository": "github:arebaka/lena",
   "funding": {
-    "type" : "patreon",
-    "url" : "https://www.patreon.com/arelive"
+    "type": "patreon",
+    "url": "https://www.patreon.com/arelive"
   },
   "keywords": [
     "telegram",
@@ -50,6 +50,7 @@
   "dependencies": {
     "pg": "^8.6.0",
     "serverline": "^1.5.0",
-    "telegraf": "^4.4.1"
+    "telegraf": "^4.4.1",
+    "toml": "^3.0.0"
   }
 }

@@ -33,10 +33,9 @@
 4. Install [npm](//www.npmjs.com) & [node.js](//npmjs.com/package/node)
 5. `npm i lenabot`
 6. `export TOKEN=<TOKEN_FROM_BOTFATHER>`
-7. `export DBURI=postgres://localhost/lena`
-8. `npx lenabot`
-9. Add your bot to a group chat and add triggers with commands above replying the messages to be resend
-10. To stop the bot type to console with it `stop` and press enter
+7. `npx lenabot`
+8. Add your bot to a group chat and add triggers with commands above replying the messages to be resend
+9. To stop the bot type to console with it `stop` and press enter
 
 ## Preparing
 1. Create your bot via [@BotFather](//t.me/BotFather), it will guide you on that
@@ -54,6 +53,8 @@ npm i lenabot
 The bot requires some environment variables. Here is a list of them:  
 `TOKEN` – bot token from @BotFather  
 `DBURI` – URI-string for connection to PSQL in format `postgres://<USER>:<PASSWORD>@<HOST>/<DATABASE>:<PORT>`
+
+Instead of the environment you can set launch parameters in a file config.toml.
 
 After setup the environment run
 ```bash
@@ -73,4 +74,4 @@ Bot @eslenabot started.
 After the launch, there are available commands `stop` & `reload` for safe stop and restart respectively.
 
 ## Support
-If something doesnt work, or you just want to talk to the bot creator or his mom, write [@arelive](//t.me/arelive). There also accepted kicks from volunteer project managers.
+If something doesnt work, or you just wanna talk to the bot creator or his mom, write [@arelive](//t.me/arelive). There also accepted kicks from volunteer project managers.
