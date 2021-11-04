@@ -1,0 +1,86 @@
+---
+name: Lena
+
+errors:
+  default: Something went wrong!
+  command_only_in_groups: The command is only available in groups!
+  command_only_for_admins: The command is only available for admins!
+  command_needs_to_reply: You need to reply to the message with this command!
+  trigger_number_is_required: A number of the argument is required!
+  unknown_callback: Unknown callback!
+
+list_of_commands: |-
+  /on <text> – create a trigger for text
+  /on "<text>" – create a trigger for full message text
+  /off <number> – delete the trigger by number
+  /onjoin – create a trigger for someone joins the chat
+  /onleft – create a trigger for someone lefts the chat
+  /list – get all active triggers
+  /trigger <number> – invoke active trigger by number forcibly
+
+callbacks:
+  lang:
+    errors:
+      no_lang: The lang not found!
+
+commands:
+  start:
+    responses:
+      ok: |-
+        Hello, I'm {{name}}!
+        I will help you diversify functionality of your chat, and cheer you up on the dark day.
+        There are commands I can execute:
+
+        {{commands}}
+
+        Lets go to have some tea! ❤️
+
+  on:
+    responses:
+      ok: The trigger {{index}} was added.
+      factor_is_required: A factor for the trigger is required!
+      factor_is_too_long: The factor cannot exceed {{length}} characters!
+      cannot: Cannot add the trigger!
+
+  off:
+    responses:
+      ok: The trigger {{index}} was deleted.
+      not_found: The trigger not found!
+
+  onjoin:
+    responses:
+      ok: The trigger {{index}} was added.
+      cannot: Cannot add the trigger!
+
+  onleft:
+    responses:
+      ok: The trigger {{index}} was added.
+      cannot: Cannot add the trigger!
+
+  list:
+    emoji:
+      text:      "📃"
+      animation: "📹"
+      audio:     "🎧"
+      dice:      "🎲"
+      document:  "🏷️"
+      game:      "🎮"
+      invoice:   "💳"
+      location:  "🌐"
+      photo:     "🖼️"
+      poll:      "📊"
+      quiz:      "🍀"
+      sticker:   "😽"
+      video:     "🎬"
+      videonote: "🎥"
+      voice:     "🎤"
+    actions:
+      join: _join the group_
+      left: _left the group_
+      default: _action_
+    responses:
+      no_triggers: There is no any trigger in this chat!
+
+  trigger:
+    responses:
+      not_found: The trigger not found!

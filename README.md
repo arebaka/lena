@@ -42,7 +42,6 @@
 2. The bot uses DBMS PostgreSQL. [Install](//www.postgresql.org/download/) if you dont have it
 3. Create a database in PSQL for you bot
 4. The bot works using [node.js](//npmjs.com/package/node). Install it
-5. Get your Telegram ID using any special bot, e.g. [that](//t.me/myidbot)
 
 ## Installation
 ```bash

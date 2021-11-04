@@ -1,4 +1,8 @@
+const path = require("path");
+const fs   = require("fs");
+const yaml = require("yaml");
+
 module.exports = {
-	eng: require("./eng.json"),
-	rus: require("./rus.json")
+	eng: yaml.parse(fs.readFileSync(path.resolve("./eng.yaml"))),
+	rus: yaml.parse(fs.readFileSync(path.resolve("./rus.yaml")))
 };
