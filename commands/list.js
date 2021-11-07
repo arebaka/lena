@@ -2,6 +2,7 @@ const db = require("../db");
 
 module.exports = async ctx => {
     const i18n     = ctx.chat.i18n.commands.list;
+    const chat     = await db.getChat(ctx.chat.id);
     const triggers = await db.getChatTriggers(ctx.chat.id);
     let   lines    = [];
     let   line;
@@ -9,7 +10,7 @@ module.exports = async ctx => {
 
     if (ctx.chat.type == "private")
         return ctx.replyWithMarkdown(ctx.chat.i18n.errors.command_only_in_groups);
-    if (!ctx.from.isAdmin)
+    if (!ctx.from.isAdmin && chat.only_admins)
         return ctx.replyWithMarkdown(ctx.chat.i18n.errors.command_only_for_admins);
 
     for (let trigger of triggers) {
@@ -33,12 +34,19 @@ module.exports = async ctx => {
                 ? trigger.factor.substring(0, 10) + "..."
                 : trigger.factor;
 
+            if (trigger.strict_case)
+                factor = `*${factor}*`
+
             if (trigger.full_factor) {
                 factor = `"${factor}"`;
             }
         }
 
         line += factor;
+
+        if (trigger.auto_delete)
+            line += ` \`[${i18n.auto_delete[trigger.auto_delete]}]\``
+
         lines.push(line);
     }
 

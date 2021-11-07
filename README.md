@@ -10,7 +10,9 @@
 `/onjoin` – create a trigger on someone joins the chat  
 `/onleft` – create a trigger on someone lefts the chat  
 `/list` – get all active triggers  
-`/trigger <number>` – invoke active trigger by number forcibly
+`/trigger <number>` – invoke active trigger by number forcibly  
+`/settings` – configure the chat  
+`/settings <number>` – configure the trigger by number
 
 ## Supported message types
 + 📃 text

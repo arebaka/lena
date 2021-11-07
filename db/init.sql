@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS public.chats (
     username character varying(32) DEFAULT NULL::character varying,
     title character varying(255) NOT NULL,
     last_trigger_index int DEFAULT 0 NOT NULL,
-    lang character(3) DEFAULT 'eng' NOT NULL
+    lang character(3) DEFAULT 'eng' NOT NULL,
+    only_admins boolean DEFAULT true NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.triggers (
@@ -43,7 +44,9 @@ CREATE TABLE IF NOT EXISTS public.triggers (
     type mess_type NOT NULL,
     action boolean DEFAULT false NOT NULL,
     factor character varying(255) NOT NULL,
-    full_factor boolean NOT NULL
+    full_factor boolean NOT NULL,
+    strict_case boolean NOT NULL,
+    auto_delete int DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.entities (
@@ -109,11 +112,14 @@ CREATE INDEX IF NOT EXISTS chats_username_index           ON public.chats    USI
 CREATE INDEX IF NOT EXISTS chats_title_index              ON public.chats    USING btree (title);
 CREATE INDEX IF NOT EXISTS chats_last_trigger_index_index ON public.chats    USING btree (last_trigger_index);
 CREATE INDEX IF NOT EXISTS chats_lang_index               ON public.chats    USING btree (lang);
+CREATE INDEX IF NOT EXISTS chats_only_admins_index        ON public.chats    USING btree (only_admins);
 CREATE INDEX IF NOT EXISTS triggers_index_index           ON public.triggers USING btree (index);
 CREATE INDEX IF NOT EXISTS triggers_type_index            ON public.triggers USING btree (type);
 CREATE INDEX IF NOT EXISTS triggers_action_index          ON public.triggers USING btree (action);
 CREATE INDEX IF NOT EXISTS triggers_factor_index          ON public.triggers USING btree (factor);
 CREATE INDEX IF NOT EXISTS triggers_full_factor_index     ON public.triggers USING btree (full_factor);
+CREATE INDEX IF NOT EXISTS triggers_strict_case_index     ON public.triggers USING btree (strict_case);
+CREATE INDEX IF NOT EXISTS triggers_auto_delete_index     ON public.triggers USING btree (auto_delete);
 CREATE INDEX IF NOT EXISTS entities_type_index            ON public.entities USING btree (type);
 CREATE INDEX IF NOT EXISTS entities_offset_index          ON public.entities USING btree ("offset");
 CREATE INDEX IF NOT EXISTS entities_length_index          ON public.entities USING btree (length);

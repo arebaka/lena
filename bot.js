@@ -7,8 +7,9 @@ const db     = require("./db");
 const config = require("./config");
 const invoke = require("./invoke");
 
-const commands = require("./commands");
-const i18n     = require("./i18n");
+const commands  = require("./commands");
+const callbacks = require("./callbacks");
+const i18n      = require("./i18n");
 
 
 
@@ -62,46 +63,36 @@ class Bot
             const data  = query.data.split(':');
 
             switch (data[0]) {
-            case "lang":
-                if (!ctx.from.isAdmin)
-                    return ctx.answerCbQuery(ctx.chat.i18n.errors.command_only_for_admins, true);
-                if (!i18n[data[1]])
-                    return ctx.answerCbQuery(ctx.chat.i18n.callbacks.lang.errors.no_lang, true);
-
-                await db.updateChatLang(ctx.chat.id, data[1]);
-                ctx.chat.i18n = i18n[data[1]]
-
-                ctx.editMessageText(ctx.chat.i18n.commands.start.responses.ok
-                    .replace("{{name}}",     ctx.chat.i18n.name)
-                    .replace("{{commands}}", ctx.chat.i18n.list_of_commands));
-            break;
-            default:
-                ctx.answerCbQuery(ctx.chat.i18n.errors.unknown_callback, true);
-            break;
+                case "lang":        return callbacks.lang(ctx, data);
+                case "settings":    return callbacks.settings(ctx, data);
+                case "auto_delete": return callbacks.autoDelete(ctx, data);
+                default:            return ctx.answerCbQuery(ctx.chat.i18n.errors.unknown_callback, true);
             }
         });
 
         this.bot.start(async ctx => {
-            ctx.replyWithMarkdown(
-                "Choose the language\nВыберите язык",
-                Markup.inlineKeyboard([
+            const markup = Markup.inlineKeyboard([
                     Markup.button.callback("English", "lang:eng"),
                     Markup.button.callback("Русский", "lang:rus")
-                ]));
+                ]);
+
+            ctx.replyWithMarkdown("Choose the language\nВыберите язык", markup);
         });
 
-        this.bot.command("on",      commands.on);
-        this.bot.command("off",     commands.off);
-        this.bot.command("onjoin",  commands.onjoin);
-        this.bot.command("onleft",  commands.onleft);
-        this.bot.command("list",    commands.list);
-        this.bot.command("trigger", commands.trigger);
+        this.bot.command("on",       commands.on);
+        this.bot.command("off",      commands.off);
+        this.bot.command("onjoin",   commands.onjoin);
+        this.bot.command("onleft",   commands.onleft);
+        this.bot.command("list",     commands.list);
+        this.bot.command("trigger",  commands.trigger);
+        this.bot.command("settings", commands.settings);
 
         this.bot.on("text", async ctx => {
             const text = ctx.message.text
-                .trim().toLowerCase().split(/\s+/g).join(' ');
+                .trim().split(/\s+/g).join(' ');
 
-            const triggers = await db.findTriggers(ctx.chat.id, text);
+            const chat     = await db.getChat(ctx.chat.id);
+            const triggers = await db.findTriggers(ctx.chat.id, text, text.toLowerCase());
 
             for (let trigger of triggers) {
                 trigger = await db.getTrigger(ctx.chat.id, trigger);

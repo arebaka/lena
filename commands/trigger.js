@@ -3,12 +3,13 @@ const invoke = require("../invoke");
 
 module.exports = async ctx => {
     const i18n  = ctx.chat.i18n.commands.trigger;
+    const chat  = await db.getChat(ctx.chat.id);
     const index = ctx.message.text
         .trim().split(' ').slice(1).join(' ');
 
     if (ctx.chat.type == "private")
         return ctx.replyWithMarkdown(ctx.chat.i18n.errors.command_only_in_groups);
-    if (!ctx.from.isAdmin)
+    if (!ctx.from.isAdmin && chat.only_admins)
         return ctx.replyWithMarkdown(ctx.chat.i18n.errors.command_only_for_admins);
     if (!/^\d+$/.test(index))
         return ctx.replyWithMarkdown(ctx.chat.i18n.errors.trigger_number_is_required);

@@ -15,7 +15,7 @@ module.exports = async ctx => {
     const trigger = await db.remTrigger(ctx.chat.id, parseInt(index));
 
     ctx.replyWithMarkdown(trigger
-        ? i18n.responses.ok.replace("{{index}}", trigger.index)
+        ? i18n.responses.ok.replace("{index}", trigger.index)
         : i18n.responses.not_found
     );
 };

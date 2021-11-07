@@ -17,44 +17,61 @@ list_of_commands: |-
   /onleft – создать триггер на выход кого либо из чата
   /list – получить список всех активных триггеров
   /trigger <номер> – принудительно вызвать триггер по номеру
+  /settings – настроить чат
+  /settings <number> – настроить триггер по номеру
 
 callbacks:
   lang:
     errors:
       no_lang: Язык не найден!
+  auto_delete:
+    text: Выбери паузу перед удалением поста.
+    variants:
+      0:    "Не удалять"
+      2:    "2с"
+      5:    "5с"
+      10:   "10с"
+      20:   "20с"
+      60:   "1м"
+      300:  "5м"
+      1200: "20м"
+      3600: "60м"
+    responses:
+      ok: Пауза перед удалением изменена.
+      invalid_value: Неверное значение!
 
 commands:
   start:
     responses:
       ok: |-
-        Привет, Я {{name}}!
+        Привет, Я {name}!
         Я помогу разнообразить функционал вашего чата и подниму настроение в мрачный день.
         Вот команды, которые я умею выполнять:
 
-        {{commands}}
+        {commands}
 
         Пойдйм пить чай! ❤️
 
   on:
     responses:
-      ok: Триггер {{index}} добавлен.
+      ok: Триггер {index} добавлен.
       factor_is_required: Необходимо прописать фактор!
-      factor_is_too_long: Фактор не может превышать длину {{length}} символов!
+      factor_is_too_long: Фактор не может превышать длину {length} символов!
       cannot: Невозможно добавить триггер!
 
   off:
     responses:
-      ok: Триггер {{index}} удалён.
+      ok: Триггер {index} удалён.
       not_found: Триггер не найден!
 
   onjoin:
     responses:
-      ok: Триггер {{index}} добавлен.
+      ok: Триггер {index} добавлен.
       cannot: Невозможно добавить триггер!
 
   onleft:
     responses:
-      ok: Триггер {{index}} добавлен.
+      ok: Триггер {index} добавлен.
       cannot: Невозможно добавить триггер!
 
   list:
@@ -78,9 +95,43 @@ commands:
       join: _заход в чат_
       left: _выход из чата_
       default: _действие_
+    auto_delete:
+      2:    "2с"
+      5:    "5с"
+      10:   "10с"
+      20:   "20с"
+      60:   "1м"
+      300:  "5м"
+      1200: "20м"
+      3600: "60м"
     responses:
       no_triggers: В этом чате не задано ни одного триггера!
 
   trigger:
     responses:
       not_found: Триггер не найден!
+
+  settings:
+    chat:
+      text: Настрой меня.
+      done: Настройки сохранены.
+      buttons:
+        only_admins: "{indicator} Только для админов"
+        change_lang: Сменить язык
+        done: Готово
+      indicators:
+        on:  ✅
+        off: ❌
+    trigger:
+      text: Настрой триггер {index}.
+      done: Триггер сохранён.
+      responses:
+        not_found: Триггер не найден!
+      buttons:
+        full_factor: "{indicator} Полное сообщение"
+        strict_case: "{indicator} Строгий регистр"
+        auto_delete: "Автоудаление"
+        done: Готово
+      indicators:
+        on:  ✅
+        off: ❌
