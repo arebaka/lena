@@ -28,27 +28,32 @@ module.exports = async ctx => {
                 [Markup.button.callback(i18n.buttons.auto_delete, `settings:${trigger.index}:auto_delete`)],
                 [Markup.button.callback(i18n.buttons.done, `settings:${trigger.index}:done`)]
             ]);
-        }
-        else {
-            markup = Markup.inlineKeyboard([
-                [Markup.button.callback(
-                    i18n.buttons.full_factor
-                        .replace("{indicator}", i18n.indicators[trigger.full_factor ? "on" : "off"]),
-                    `settings:${trigger.index}:full_factor:${trigger.full_factor ? "off" : "on"}`
-                )],
-                [Markup.button.callback(
-                    i18n.buttons.strict_case
-                        .replace("{indicator}", i18n.indicators[trigger.strict_case ? "on" : "off"]),
-                    `settings:${trigger.index}:strict_case:${trigger.strict_case ? "off" : "on"}`
-                )],
 
-                [Markup.button.callback(i18n.buttons.auto_delete, `settings:${trigger.index}:auto_delete`)],
-
-                [Markup.button.callback(i18n.buttons.done, `settings:${trigger.index}:done`)]
-            ]);
+            return ctx.replyWithMarkdown(i18n.text_action.replace("{index}", index), markup);
         }
 
-        return ctx.replyWithMarkdown(i18n.text.replace("{index}", index), markup);
+        markup = Markup.inlineKeyboard([
+            [Markup.button.callback(
+                i18n.buttons.full_factor
+                    .replace("{indicator}", i18n.indicators[trigger.full_factor ? "on" : "off"]),
+                `settings:${trigger.index}:full_factor:${trigger.full_factor ? "off" : "on"}`
+            )],
+            [Markup.button.callback(
+                i18n.buttons.strict_case
+                    .replace("{indicator}", i18n.indicators[trigger.strict_case ? "on" : "off"]),
+                `settings:${trigger.index}:strict_case:${trigger.strict_case ? "off" : "on"}`
+            )],
+
+            [Markup.button.callback(i18n.buttons.auto_delete, `settings:${trigger.index}:auto_delete`)],
+
+            [Markup.button.callback(i18n.buttons.done, `settings:${trigger.index}:done`)]
+        ]);
+
+        return ctx.replyWithMarkdown(
+            i18n.text
+                .replace("{index}", index)
+                .replace("{factor}", trigger.factor),
+            markup);
     }
 
     i18n = i18n.chat;

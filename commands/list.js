@@ -31,7 +31,7 @@ module.exports = async ctx => {
         }
         else {
             factor = trigger.factor.length > 10
-                ? trigger.factor.substring(0, 10) + "..."
+                ? trigger.factor.substring(0, 15) + "..."
                 : trigger.factor;
 
             if (trigger.strict_case)

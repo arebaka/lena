@@ -123,7 +123,11 @@ commands:
         on:  ✅
         off: ❌
     trigger:
-      text: Setting the trigger {index}.
+      text: |-
+        Setting the trigger {index}:
+
+        {factor}
+      text_actions: Setting the trigger {index}.
       done: The trigger was saved.
       responses:
         not_found: The trigger not found!

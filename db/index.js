@@ -230,6 +230,7 @@ class DBHelper
                 select index, type, action, factor, full_factor, strict_case, auto_delete
                 from triggers
                 where chat_id = $1
+                order by index
             `, [chatId]);
 
         return triggers.rows;
@@ -246,16 +247,16 @@ class DBHelper
                     $2 like '%' || factor || '%'
                     and full_factor = false
                     and strict_case = true
-                ) and (
-                    $3 like '%' || factor || '%'
+                ) or (
+                    $3 like '%' || LOWER(factor) || '%'
                     and full_factor = false
                     and strict_case = false
-                ) and (
+                ) or (
                     factor = $2
                     and full_factor = true
                     and strict_case = true
-                ) and (
-                    factor = $3
+                ) or (
+                    LOWER(factor) = $3
                     and full_factor = true
                     and strict_case = false
                 )

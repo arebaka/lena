@@ -123,7 +123,11 @@ commands:
         on:  ✅
         off: ❌
     trigger:
-      text: Настрой триггер {index}.
+      text: |-
+        Настрой триггер {index}:
+
+        {factor}
+      text_action: Настрой триггер {index}.
       done: Триггер сохранён.
       responses:
         not_found: Триггер не найден!

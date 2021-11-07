@@ -8,7 +8,7 @@ module.exports = async ctx => {
     const chat       = await db.getChat(ctx.chat.id);
     let   fullFactor = false;
     let   factor     = ctx.message.text
-        .trim().toLowerCase().split(' ').slice(1).join(' ');
+        .trim().split(' ').slice(1).join(' ');
 
     if (ctx.chat.type == "private")
         return ctx.replyWithMarkdown(ctx.chat.i18n.errors.command_only_in_groups);
