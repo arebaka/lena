@@ -1,5 +1,7 @@
 const db = require("../db");
 
+const MAX_FACTOR_LENGTH = 15;
+
 module.exports = async ctx => {
     const i18n     = ctx.chat.i18n.commands.list;
     const chat     = await db.getChat(ctx.chat.id);
@@ -30,22 +32,16 @@ module.exports = async ctx => {
             }
         }
         else {
-            factor = trigger.factor.length > 10
-                ? trigger.factor.substring(0, 15) + "..."
+            factor = trigger.factor.length > MAX_FACTOR_LENGTH
+                ? trigger.factor.substring(0, MAX_FACTOR_LENGTH) + "..."
                 : trigger.factor;
 
-            if (trigger.strict_case)
-                factor = `*${factor}*`
-
-            if (trigger.full_factor) {
-                factor = `"${factor}"`;
-            }
+            factor = trigger.strict_case ? `*${factor}*` : factor;
+            factor = trigger.full_factor ? `"${factor}"` : factor;
         }
 
         line += factor;
-
-        if (trigger.auto_delete)
-            line += ` \`[${i18n.auto_delete[trigger.auto_delete]}]\``
+        line += trigger.auto_delete ? ` \`[${i18n.auto_delete[trigger.auto_delete]}]\`` : "";
 
         lines.push(line);
     }

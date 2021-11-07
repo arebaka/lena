@@ -76,9 +76,8 @@ module.exports = async (mess, action, factor, fullFactor=false, strictCase=false
         );
     }
 
-    if (mess.entities && mess.entities.length) {
-        await db.addEntities(trigger.id, mess.entities);
-    }
+    mess.entities && mess.entities.length
+        ? await db.addEntities(trigger.id, mess.entities) : null;
 
     return trigger;
 };

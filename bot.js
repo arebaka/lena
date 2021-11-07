@@ -31,7 +31,7 @@ class Bot
                 if (ctx.chat) {
                     const lang = await db.updateChat(
                         ctx.chat.id, ctx.chat.username,
-                        ctx.chat.title ? ctx.chat.title : ctx.chat.first_name
+                        ctx.chat.title || ctx.chat.first_name
                     );
                     ctx.chat.i18n = i18n[lang];
 
