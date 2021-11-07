@@ -33,7 +33,7 @@ class Bot
                         ctx.chat.id, ctx.chat.username,
                         ctx.chat.title || ctx.chat.first_name
                     );
-                    ctx.chat.i18n = i18n[lang];
+                    ctx.chat._ = i18n[lang];
 
                     if (ctx.chat.type != "private") {
                         await this.bot.telegram.getChatAdministrators(ctx.chat.id)
@@ -46,7 +46,7 @@ class Bot
                 }
                 else {
                     ctx.chat = {
-                        i18n: i18n.eng
+                        _: i18n.eng
                     };
                 }
 
@@ -54,7 +54,7 @@ class Bot
             }
             catch (err) {
                 console.error(err);
-                ctx.replyWithMarkdown(ctx.chat.i18n ? ctx.chat.i18n.errors.default : "Что то пошло не так!");
+                ctx.replyWithMarkdown(ctx.chat._ ? ctx.chat._.errors.default : "Что то пошло не так!");
             }
         });
 
@@ -66,7 +66,7 @@ class Bot
                 case "lang":        return callbacks.lang(ctx, data);
                 case "settings":    return callbacks.settings(ctx, data);
                 case "auto_delete": return callbacks.autoDelete(ctx, data);
-                default:            return ctx.answerCbQuery(ctx.chat.i18n.errors.unknown_callback, true);
+                default:            return ctx.answerCbQuery(ctx.chat._.errors.unknown_callback, true);
             }
         });
 

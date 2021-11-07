@@ -8,7 +8,7 @@ async function settingTrigger(ctx, data)
     const prop  = data[2];
     const value = data[3];
 
-    let _      = ctx.chat.i18n.commands.settings.trigger;
+    let _      = ctx.chat._.commands.settings.trigger;
     let markup = ctx.update.callback_query.message.reply_markup;
 
     switch (prop) {
@@ -22,7 +22,7 @@ async function settingTrigger(ctx, data)
 
             return ctx.editMessageReplyMarkup(markup);
         case "auto_delete":
-            _ = ctx.chat.i18n.callbacks.auto_delete;
+            _ = ctx.chat._.callbacks.auto_delete;
 
             markup = Markup.inlineKeyboard([
                 [ 0          ],
@@ -38,7 +38,7 @@ async function settingTrigger(ctx, data)
         case "done":
             return ctx.editMessageText(_.done);
         default:
-            return ctx.answerCbQuery(ctx.chat.i18n.errors.unknown_callback, true);
+            return ctx.answerCbQuery(ctx.chat._.errors.unknown_callback, true);
     }
 }
 
@@ -47,7 +47,7 @@ async function settingChat(ctx, data)
     const prop  = data[1];
     const value = data[2];
 
-    let _      = ctx.chat.i18n.commands.settings.chat;
+    let _      = ctx.chat._.commands.settings.chat;
     let markup = ctx.update.callback_query.message.reply_markup;
 
     switch (prop) {
@@ -69,13 +69,13 @@ async function settingChat(ctx, data)
         case "done":
             return ctx.editMessageText(_.done);
         default:
-            return ctx.answerCbQuery(ctx.chat.i18n.errors.unknown_callback, true);   
+            return ctx.answerCbQuery(ctx.chat._.errors.unknown_callback, true);
     }
 }
 
 module.exports = async (ctx, data) => {
-    if (!ctx.from.isAdmin)
-        return ctx.answerCbQuery(ctx.chat.i18n.errors.command_only_for_admins, true);
+    if (ctx.chat.type != "private" && !ctx.from.isAdmin)
+        return ctx.answerCbQuery(ctx.chat._.errors.command_only_for_admins, true);
 
     await /^\d+$/.test(data[1]) ? settingTrigger(ctx, data) : settingChat(ctx, data);
 };

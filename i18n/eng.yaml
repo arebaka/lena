@@ -92,9 +92,9 @@ commands:
       videonote: "🎥"
       voice:     "🎤"
     actions:
-      join: _join the group_
-      left: _left the group_
-      default: _action_
+      join: join the group
+      left: left the group
+      default: action
     auto_delete:
       2:    "2s"
       5:    "5s"
