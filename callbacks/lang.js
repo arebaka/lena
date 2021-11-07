@@ -5,7 +5,7 @@ module.exports = async (ctx, data) => {
     if (ctx.chat.type != "private" && !ctx.from.isAdmin)
         return ctx.answerCbQuery(ctx.chat._.errors.command_only_for_admins, true);
     if (!i18n[data[1]])
-        return ctx.answerCbQuery(ctx.chat._.callbacks.lang.errors.no_lang, true);
+        return ctx.answerCbQuery(ctx.chat._.callbacks.lang.responses.no_lang, true);
 
     await db.updateChatProp(ctx.chat.id, "lang", data[1]);
     ctx.chat._ = i18n[data[1]];

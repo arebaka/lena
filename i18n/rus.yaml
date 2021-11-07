@@ -22,23 +22,19 @@ list_of_commands: |-
 
 callbacks:
   lang:
-    errors:
+    responses:
       no_lang: Язык не найден!
+
+  settings:
+    trigger:
+      responses:
+        not_found: Триггер не найден!
+
   auto_delete:
-    text: Выбери паузу перед удалением поста.
-    variants:
-      0:    "Не удалять"
-      2:    "2с"
-      5:    "5с"
-      10:   "10с"
-      20:   "20с"
-      60:   "1м"
-      300:  "5м"
-      1200: "20м"
-      3600: "60м"
     responses:
       ok: Пауза перед удалением изменена.
       invalid_value: Неверное значение!
+      not_found: Триггер не найден!
 
 commands:
   start:
@@ -139,3 +135,15 @@ commands:
       indicators:
         on:  ✅
         off: ❌
+    auto_delete:
+      text: Выбери паузу перед удалением поста.
+      variants:
+        0:    "Не удалять"
+        2:    "2с"
+        5:    "5с"
+        10:   "10с"
+        20:   "20с"
+        60:   "1м"
+        300:  "5м"
+        1200: "20м"
+        3600: "60м"

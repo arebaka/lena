@@ -10,7 +10,7 @@ module.exports = async ctx => {
     if (!ctx.message.reply_to_message)
         return ctx.replyWithMarkdown(ctx.chat._.errors.command_needs_to_reply);
 
-    const trigger = await bind(ctx.message.reply_to_message, true, "left");
+    const trigger = await bind(ctx.message.reply_to_message, ctx.from.id, true, "left");
 
     ctx.replyWithMarkdown(trigger
         ? _.responses.ok.replace("{index}", trigger.index)

@@ -22,23 +22,19 @@ list_of_commands: |-
 
 callbacks:
   lang:
-    errors:
+    responses:
       no_lang: The lang not found!
+
+  settings:
+    trigger:
+      responses:
+        not_found: The trigger not found!
+
   auto_delete:
-    text: Select a delay before post will be deleted.
-    variants:
-      0:    "Dont delete"
-      2:    "2s"
-      5:    "5s"
-      10:   "10s"
-      20:   "20s"
-      60:   "1m"
-      300:  "5m"
-      1200: "20m"
-      3600: "60m"
     responses:
       ok: The delay before delete was changed.
       invalid_value: Invalid value!
+      not_found: The trigger not found!
 
 commands:
   start:
@@ -139,3 +135,15 @@ commands:
       indicators:
         on:  ✅
         off: ❌
+    auto_delete:
+      text: Select a delay before post will be deleted.
+      variants:
+        0:    "Dont delete"
+        2:    "2s"
+        5:    "5s"
+        10:   "10s"
+        20:   "20s"
+        60:   "1m"
+        300:  "5m"
+        1200: "20m"
+        3600: "60m"

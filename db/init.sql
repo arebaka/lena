@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS public.chats (
 CREATE TABLE IF NOT EXISTS public.triggers (
     id bigserial NOT NULL PRIMARY KEY,
     chat_id bigint NOT NULL,
+    creator_id bigint NOT NULL,
     index integer NOT NULL,
     type mess_type NOT NULL,
     action boolean DEFAULT false NOT NULL,
@@ -125,6 +126,7 @@ CREATE INDEX IF NOT EXISTS entities_offset_index          ON public.entities USI
 CREATE INDEX IF NOT EXISTS entities_length_index          ON public.entities USING btree (length);
 
 ALTER TABLE public.triggers          ADD CONSTRAINT triggers_chat_id_fkey             FOREIGN KEY (chat_id)    REFERENCES public.chats(id)         ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE public.triggers          ADD CONSTRAINT triggers_creator_id_fkey          FOREIGN KEY (creator_id) REFERENCES public.users(id)         ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.entities          ADD CONSTRAINT entities_trigger_id_fkey          FOREIGN KEY (trigger_id) REFERENCES public.triggers(id)      ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.text_triggers     ADD CONSTRAINT text_triggers_trigger_id_fkey     FOREIGN KEY (trigger_id) REFERENCES public.triggers(id)      ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.dice_triggers     ADD CONSTRAINT dice_triggers_trigger_id_fkey     FOREIGN KEY (trigger_id) REFERENCES public.triggers(id)      ON UPDATE CASCADE ON DELETE CASCADE;

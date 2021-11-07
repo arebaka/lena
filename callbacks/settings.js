@@ -4,12 +4,22 @@ const db = require("../db");
 
 async function settingTrigger(ctx, data)
 {
+    if (!/^\d+$/.test(data[1]))
+        return ctx.answerCbQuery(ctx.chat._.errors.trigger_number_is_required, true);
+
     const index = parseInt(data[1]);
     const prop  = data[2];
     const value = data[3];
 
     let _      = ctx.chat._.commands.settings.trigger;
     let markup = ctx.update.callback_query.message.reply_markup;
+
+    const trigger = await db.getTrigger(ctx.chat.id, index);
+
+    if (!trigger)
+        return ctx.answerCbQuery(ctx.chat._.callbacks.settings.trigger.responses.not_found);
+    if (ctx.chat.type != "private" && !ctx.from.isAdmin && ctx.from.id != trigger.creator_id)
+        return ctx.answerCbQuery(ctx.chat._.errors.command_only_for_admins, true);
 
     switch (prop) {
         case "full_factor":
@@ -22,7 +32,7 @@ async function settingTrigger(ctx, data)
 
             return ctx.editMessageReplyMarkup(markup);
         case "auto_delete":
-            _ = ctx.chat._.callbacks.auto_delete;
+            _ = ctx.chat._.commands.settings.auto_delete;
 
             markup = Markup.inlineKeyboard([
                 [ 0          ],
@@ -50,6 +60,9 @@ async function settingChat(ctx, data)
     let _      = ctx.chat._.commands.settings.chat;
     let markup = ctx.update.callback_query.message.reply_markup;
 
+    if (ctx.chat.type != "private" && !ctx.from.isAdmin)
+        return ctx.answerCbQuery(ctx.chat._.errors.command_only_for_admins, true);
+
     switch (prop) {
         case "only_admins":
             await db.updateChatProp(ctx.chat.id, prop, value == "on");
@@ -74,8 +87,5 @@ async function settingChat(ctx, data)
 }
 
 module.exports = async (ctx, data) => {
-    if (ctx.chat.type != "private" && !ctx.from.isAdmin)
-        return ctx.answerCbQuery(ctx.chat._.errors.command_only_for_admins, true);
-
     await /^\d+$/.test(data[1]) ? settingTrigger(ctx, data) : settingChat(ctx, data);
 };

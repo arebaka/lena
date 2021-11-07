@@ -8,9 +8,6 @@ module.exports = async ctx => {
     const index = ctx.message.text
         .trim().split(' ').slice(1).join(' ');
 
-    if (ctx.chat.type != "private" && !ctx.from.isAdmin)
-        return ctx.replyWithMarkdown(ctx.chat._.errors.command_only_for_admins);
-
     if (index) {
         if (!/^\d+$/.test(index))
             return ctx.replyWithMarkdown(ctx.chat._.errors.trigger_number_is_required);
@@ -18,8 +15,11 @@ module.exports = async ctx => {
         _ = _.trigger;
 
         const trigger = await db.getTrigger(ctx.chat.id, parseInt(index));
+
         if (!trigger)
             return ctx.replyWithMarkdown(_.responses.not_found);
+        if (ctx.chat.type != "private" && !ctx.from.isAdmin && ctx.from.id != trigger.creator_id)
+            return ctx.replyWithMarkdown(ctx.chat._.errors.command_only_for_admins);
 
         if (trigger.action) {
             markup = Markup.inlineKeyboard([
@@ -57,6 +57,9 @@ module.exports = async ctx => {
     _ = _.chat;
 
     const chat = await db.getChat(ctx.chat.id);
+
+    if (ctx.chat.type != "private" && !ctx.from.isAdmin)
+        return ctx.replyWithMarkdown(ctx.chat._.errors.command_only_for_admins);
 
     markup = Markup.inlineKeyboard([
         [Markup.button.callback(

@@ -26,7 +26,7 @@ module.exports = async ctx => {
         fullFactor = true;
     }
 
-    const trigger = await bind(ctx.message.reply_to_message, false, factor, fullFactor);
+    const trigger = await bind(ctx.message.reply_to_message, ctx.from.id, false, factor, fullFactor);
 
     ctx.replyWithMarkdown(trigger
         ? _.responses.ok.replace("{index}", trigger.index)
