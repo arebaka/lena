@@ -9,7 +9,7 @@ const config = require("../config");
 
 class DBHelper
 {
-    async _addTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, type)
+    async _addTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, type)
     {
         const index = await this.pool.query(`
                 update chats set last_trigger_index = last_trigger_index + 1
@@ -19,12 +19,12 @@ class DBHelper
 
         const trigger = await this.pool.query(`
                 insert into triggers
-                    (chat_id, creator_id, index, type, action, factor, full_factor, strict_case, auto_delete)
-                values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                returning id, index, type, action, factor, full_factor, strict_case, auto_delete
+                    (chat_id, creator_id, index, type, action, factor, full_factor, strict_case, auto_delete, reply)
+                values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                returning id, index, type, action, factor, full_factor, strict_case, auto_delete, reply
             `, [
                 chatId, creatorId, index.rows[0].last_trigger_index, type,
-                action, factor, fullFactor, strictCase, autoDelete
+                action, factor, fullFactor, strictCase, autoDelete, reply
             ]);
 
         return trigger.rows[0];
@@ -66,7 +66,7 @@ class DBHelper
         await this.start();
     }
 
-    async updateUser(id, username, firstName, lastName)
+    async setUser(id, username, firstName, lastName)
     {
         await this.pool.query(`
                 insert into users (id, username, first_name, last_name)
@@ -78,7 +78,7 @@ class DBHelper
             ]);
     }
 
-    async updateChat(id, username, title)
+    async setChat(id, username, title)
     {
         const lang = await this.pool.query(`
                 insert into chats (id, username, title)
@@ -93,7 +93,7 @@ class DBHelper
         return lang.rows[0].lang;
     }
 
-    async updateChatProp(id, prop, value)
+    async setChatProp(id, prop, value)
     {
         await this.pool.query(`
                 update chats
@@ -115,7 +115,7 @@ class DBHelper
         return chat.rows.length ? chat.rows[0] : null;
     }
 
-    async updateTriggerProp(chatId, index, prop, value)
+    async setTriggerProp(chatId, index, prop, value)
     {
         await this.pool.query(`
                 update triggers
@@ -130,7 +130,7 @@ class DBHelper
     async getTrigger(chatId, index)
     {
         let trigger = await this.pool.query(`
-                select id, creator_id, index, type, action, factor, full_factor, strict_case, auto_delete
+                select id, creator_id, index, type, action, factor, full_factor, strict_case, auto_delete, reply
                 from triggers
                 where chat_id = $1
                 and index = $2
@@ -143,77 +143,77 @@ class DBHelper
             return null;
 
         switch (trigger.type) {
-        case "text":
-            const text = await this.pool.query(`
-                    select text
-                    from text_triggers
-                    where trigger_id = $1
-                `, [trigger.id]);
+            case "text":
+                const text = await this.pool.query(`
+                        select text
+                        from text_triggers
+                        where trigger_id = $1
+                    `, [trigger.id]);
 
-            trigger.text = text.rows[0].text;
-        break;
-        case "animation":
-        case "audio":
-        case "document":
-        case "photo":
-        case "sticker":
-        case "video":
-        case "videonote":
-        case "voice":
-            let file = await this.pool.query(`
-                    select fileid, caption
-                    from file_triggers
-                    where trigger_id = $1
-                `, [trigger.id]);
+                trigger.text = text.rows[0].text;
+            break;
+            case "animation":
+            case "audio":
+            case "document":
+            case "photo":
+            case "sticker":
+            case "video":
+            case "videonote":
+            case "voice":
+                let file = await this.pool.query(`
+                        select fileid, caption
+                        from file_triggers
+                        where trigger_id = $1
+                    `, [trigger.id]);
 
-            file = file.rows[0];
-            trigger.fileid  = file.fileid;
-            trigger.caption = file.caption;
-        break;
-        case "dice":
-            let dice = await this.pool.query(`
-                    select emoji
-                    from dice_triggers
-                    where trigger_id = $1
-                `, [trigger.id]);
+                file = file.rows[0];
+                trigger.fileid  = file.fileid;
+                trigger.caption = file.caption;
+            break;
+            case "dice":
+                let dice = await this.pool.query(`
+                        select emoji
+                        from dice_triggers
+                        where trigger_id = $1
+                    `, [trigger.id]);
 
-            trigger.emoji = dice.rows[0].emoji;
-        break;
-        case "location":
-            let coords = await this.pool.query(`
-                    select coords
-                    from location_triggers
-                    where trigger_id = $1
-                `, [trigger.id]);
+                trigger.emoji = dice.rows[0].emoji;
+            break;
+            case "location":
+                let coords = await this.pool.query(`
+                        select coords
+                        from location_triggers
+                        where trigger_id = $1
+                    `, [trigger.id]);
 
-            coords = coords.rows[0].coords;
-            trigger.latitude  = coords.x;
-            trigger.longitude = coords.y;
-        break;
-        case "poll":
-            let poll = await this.pool.query(`
-                    select id, question, anon, multiple_answers
-                    from poll_triggers
-                    where trigger_id = $1
-                `, [trigger.id]);
+                coords = coords.rows[0].coords;
+                trigger.latitude  = coords.x;
+                trigger.longitude = coords.y;
+            break;
+            case "poll":
+                let poll = await this.pool.query(`
+                        select id, question, anon, multiple_answers
+                        from poll_triggers
+                        where trigger_id = $1
+                    `, [trigger.id]);
 
-            poll = poll.rows[0];
-            trigger.question        = poll.question;
-            trigger.anon            = poll.anon;
-            trigger.multipleAnswers = poll.multiple_answers;
+                poll = poll.rows[0];
+                trigger.question        = poll.question;
+                trigger.anon            = poll.anon;
+                trigger.multipleAnswers = poll.multiple_answers;
 
-            let options = await this.pool.query(`
-                    select text
-                    from poll_options
-                    where poll_id = $1
-                `, [poll.id]);
+                let options = await this.pool.query(`
+                        select text
+                        from poll_options
+                        where poll_id = $1
+                    `, [poll.id]);
 
-            trigger.options = options.rows.map(o => o.text);
-        break;
+                trigger.options = options.rows.map(o => o.text);
+            break;
         }
 
         const entities = await this.pool.query(`
-                select type, "offset", length
+                select type, "offset", length, url
                 from entities
                 where trigger_id = $1
             `, [trigger.id]);
@@ -227,7 +227,7 @@ class DBHelper
     async getChatTriggers(chatId)
     {
         const triggers = await this.pool.query(`
-                select index, type, action, factor, full_factor, strict_case, auto_delete
+                select index, type, action, factor, full_factor, strict_case, auto_delete, reply
                 from triggers
                 where chat_id = $1
                 order by index
@@ -299,19 +299,31 @@ class DBHelper
     async addEntities(triggerId, entities)
     {
         for (let entity of entities) {
-            await this.pool.query(`
-                    insert into entities (trigger_id, type, "offset", length)
-                    values ($1, $2, $3, $4)
-                `, [
-                    triggerId, entity.type, entity.offset, entity.length
-                ]);
+            if (["bold", "italic", "underline", "striketrough","code", "pre", "mention", "url"]
+                .includes(entity.type)
+            ) {
+                await this.pool.query(`
+                        insert into entities (trigger_id, type, "offset", length)
+                        values ($1, $2, $3, $4)
+                    `, [
+                        triggerId, entity.type, entity.offset, entity.length
+                    ]);
+            }
+            else if (entity.type == "text_link") {
+                await this.pool.query(`
+                        insert into entities (trigger_id, type, "offset", length, url)
+                        values ($1, $2, $3, $4, $5)
+                    `, [
+                        triggerId, entity.type, entity.offset, entity.length, entity.url
+                    ]);
+            }
         }
     }
 
-    async addTextTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, text)
+    async addTextTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, text)
     {
         const trigger = await this._addTrigger(
-            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, "text");
+            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, "text");
 
         await this.pool.query(`
                 insert into text_triggers (trigger_id, text)
@@ -323,10 +335,10 @@ class DBHelper
         return trigger;
     }
 
-    async addFileTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, type, fileid, caption)
+    async addFileTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, type, fileid, caption)
     {
         const trigger = await this._addTrigger(
-            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, type);
+            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, type);
 
         await this.pool.query(`
                 insert into file_triggers (trigger_id, fileid, caption)
@@ -338,10 +350,10 @@ class DBHelper
         return trigger;
     }
 
-    async addDiceTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, emoji)
+    async addDiceTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, emoji)
     {
         const trigger = await this._addTrigger(
-            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, "dice");
+            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, "dice");
 
         await this.pool.query(`
                 insert into dice_triggers (trigger_id, emoji)
@@ -353,10 +365,10 @@ class DBHelper
         return trigger;
     }
 
-    async addLocationTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, latitude, longitude)
+    async addLocationTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, latitude, longitude)
     {
         const trigger = await this._addTrigger(
-            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, "location");
+            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, "location");
 
         await this.pool.query(`
                 insert into location_triggers (trigger_id, coords)
@@ -369,10 +381,10 @@ class DBHelper
     }
 
     async addPollTrigger(
-        chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, type, question, anon, multiple_answers, options)
+        chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, type, question, anon, multiple_answers, options)
     {
         const trigger = await this._addTrigger(
-            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, "poll");
+            chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, "poll");
 
         const poll = await this.pool.query(`
                 insert into poll_triggers (trigger_id, type, question, anon, multiple_answers)

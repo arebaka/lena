@@ -7,7 +7,7 @@ module.exports = async (ctx, data) => {
     if (!i18n[data[1]])
         return ctx.answerCbQuery(ctx.chat._.callbacks.lang.responses.no_lang, true);
 
-    await db.updateChatProp(ctx.chat.id, "lang", data[1]);
+    await db.setChatProp(ctx.chat.id, "lang", data[1]);
     ctx.chat._ = i18n[data[1]];
 
     ctx.editMessageText(ctx.chat._.commands.start.responses.ok

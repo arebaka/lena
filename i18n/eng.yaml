@@ -128,6 +128,7 @@ commands:
       responses:
         not_found: The trigger not found!
       buttons:
+        reply: "{indicator} Reply"
         full_factor: "{indicator} Full message"
         strict_case: "{indicator} Strict case"
         auto_delete: "Auto-delete"

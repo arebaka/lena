@@ -1,4 +1,4 @@
-const { Markup } = require("telegraf");
+const Markup = require("telegraf").Markup;
 
 const db = require("../db");
 
@@ -21,7 +21,7 @@ module.exports = async (ctx, data) => {
     if (ctx.chat.type != "private" && !ctx.from.isAdmin && ctx.from.id != trigger.creator_id)
         return ctx.answerCbQuery(ctx.chat._.errors.command_only_for_admins, true);
 
-    await db.updateTriggerProp(ctx.chat.id, index, "auto_delete", value);
+    await db.setTriggerProp(ctx.chat.id, index, "auto_delete", value);
 
     ctx.editMessageText(_.responses.ok);
 };

@@ -128,6 +128,7 @@ commands:
       responses:
         not_found: Триггер не найден!
       buttons:
+        reply: "{indicator} Ответом"
         full_factor: "{indicator} Полное сообщение"
         strict_case: "{indicator} Строгий регистр"
         auto_delete: "Автоудаление"

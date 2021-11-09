@@ -18,15 +18,15 @@ module.exports = async ctx => {
 
         if (trigger.action) {
             switch (trigger.factor) {
-            case "join":
-                factor = _.actions.join;
-            break;
-            case "left":
-                factor = _.actions.left;
-            break;
-            default:
-                factor = _.actions.default;
-            break;
+                case "join":
+                    factor = _.actions.join;
+                break;
+                case "left":
+                    factor = _.actions.left;
+                break;
+                default:
+                    factor = _.actions.default;
+                break;
             }
 
             factor = `_${factor}_`;

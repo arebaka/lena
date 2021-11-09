@@ -21,6 +21,18 @@ CREATE TYPE poll_type AS ENUM (
     'quiz'
 );
 
+CREATE TYPE entity_type AS ENUM (
+    'bold',
+    'italic',
+    'underline',
+    'striketrough',
+    'code',
+    'pre',
+    'mention',
+    'url',
+    'text_link'
+);
+
 CREATE TABLE IF NOT EXISTS public.users (
     id bigint NOT NULL PRIMARY KEY,
     username character varying(32) DEFAULT NULL::character varying,
@@ -47,15 +59,17 @@ CREATE TABLE IF NOT EXISTS public.triggers (
     factor character varying(255) NOT NULL,
     full_factor boolean NOT NULL,
     strict_case boolean NOT NULL,
-    auto_delete int DEFAULT 0 NOT NULL
+    auto_delete int DEFAULT 0 NOT NULL,
+    reply boolean DEFAULT false NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.entities (
     id bigserial NOT NULL PRIMARY KEY,
     trigger_id bigint NOT NULL,
-    type character varying(16) NOT NULL,
+    type entity_type NOT NULL,
     "offset" integer NOT NULL,
-    length integer NOT NULL
+    length integer NOT NULL,
+    url character varying(4096) DEFAULT NULL::character varying
 );
 
 CREATE TABLE IF NOT EXISTS public.text_triggers (
@@ -121,9 +135,11 @@ CREATE INDEX IF NOT EXISTS triggers_factor_index          ON public.triggers USI
 CREATE INDEX IF NOT EXISTS triggers_full_factor_index     ON public.triggers USING btree (full_factor);
 CREATE INDEX IF NOT EXISTS triggers_strict_case_index     ON public.triggers USING btree (strict_case);
 CREATE INDEX IF NOT EXISTS triggers_auto_delete_index     ON public.triggers USING btree (auto_delete);
+CREATE INDEX IF NOT EXISTS triggers_reply_index           ON public.triggers USING btree (reply);
 CREATE INDEX IF NOT EXISTS entities_type_index            ON public.entities USING btree (type);
 CREATE INDEX IF NOT EXISTS entities_offset_index          ON public.entities USING btree ("offset");
 CREATE INDEX IF NOT EXISTS entities_length_index          ON public.entities USING btree (length);
+CREATE INDEX IF NOT EXISTS entities_url_index             ON public.entities USING btree (url);
 
 ALTER TABLE public.triggers          ADD CONSTRAINT triggers_chat_id_fkey             FOREIGN KEY (chat_id)    REFERENCES public.chats(id)         ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.triggers          ADD CONSTRAINT triggers_creator_id_fkey          FOREIGN KEY (creator_id) REFERENCES public.users(id)         ON UPDATE CASCADE ON DELETE CASCADE;

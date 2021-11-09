@@ -1,4 +1,4 @@
-const { Markup } = require("telegraf");
+const Markup = require("telegraf").Markup;
 
 const db = require("../db");
 
@@ -31,6 +31,11 @@ module.exports = async ctx => {
         }
 
         markup = Markup.inlineKeyboard([
+            [Markup.button.callback(
+                _.buttons.reply
+                    .replace("{indicator}", _.indicators[trigger.reply ? "on" : "off"]),
+                `settings:${trigger.index}:reply:${trigger.reply ? "off" : "on"}`
+            )],
             [Markup.button.callback(
                 _.buttons.full_factor
                     .replace("{indicator}", _.indicators[trigger.full_factor ? "on" : "off"]),

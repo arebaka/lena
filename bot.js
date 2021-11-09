@@ -24,12 +24,12 @@ class Bot
 
         this.bot.use(async (ctx, next) => {
             try {
-                ctx.from && await db.updateUser(
+                ctx.from && await db.setUser(
                     ctx.from.id, ctx.from.username, ctx.from.first_name, ctx.from.last_name
                 );
 
                 if (ctx.chat) {
-                    const lang = await db.updateChat(
+                    const lang = await db.setChat(
                         ctx.chat.id, ctx.chat.username,
                         ctx.chat.title || ctx.chat.first_name
                     );

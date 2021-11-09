@@ -1,4 +1,4 @@
-const { Markup } = require("telegraf");
+const Markup = require("telegraf").Markup;
 
 const db = require("../db");
 
@@ -22,9 +22,10 @@ async function settingTrigger(ctx, data)
         return ctx.answerCbQuery(ctx.chat._.errors.command_only_for_admins, true);
 
     switch (prop) {
+        case "reply":
         case "full_factor":
         case "strict_case":
-            await db.updateTriggerProp(ctx.chat.id, index, prop, value == "on");
+            await db.setTriggerProp(ctx.chat.id, index, prop, value == "on");
 
             markup.inline_keyboard.find(b => b[0].callback_data.includes(prop))[0] = Markup.button.callback(
                 _.buttons[prop].replace("{indicator}", _.indicators[value]),
@@ -65,7 +66,7 @@ async function settingChat(ctx, data)
 
     switch (prop) {
         case "only_admins":
-            await db.updateChatProp(ctx.chat.id, prop, value == "on");
+            await db.setChatProp(ctx.chat.id, prop, value == "on");
 
             markup.inline_keyboard.find(b => b[0].callback_data.includes(prop))[0] = Markup.button.callback(
                 _.buttons[prop].replace("{indicator}", _.indicators[value]),
