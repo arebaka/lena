@@ -3,6 +3,14 @@
 
 > A [Telegram](//telegram.org) bot who saves messages from group chats and sends them binding to triggers set by administrators.
 
+![](https://img.shields.io/tokei/lines/github/arebaka/lena)
+![](https://img.shields.io/github/repo-size/arebaka/lena)
+![](https://img.shields.io/npm/v/lenabot)
+
+![](https://img.shields.io/badge/English-100%25-brightgreen)
+![](https://img.shields.io/badge/Russian-100%25-brightgreen)
+
+
 ## Commands
 `/on <text>` – create a trigger on text  
 `/on <"text">` – create a trigger on full message text  
