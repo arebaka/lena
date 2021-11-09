@@ -12,7 +12,7 @@
 `/list` – get all active triggers  
 `/trigger <number>` – invoke active trigger by number forcibly  
 `/settings` – configure the chat  
-`/settings <number>` – configure the trigger by number
+`/edit <number>` – configure the trigger by number
 
 ## Supported message types
 + 📃 text

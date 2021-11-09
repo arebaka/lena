@@ -18,7 +18,7 @@ list_of_commands: |-
   /list – получить список всех активных триггеров
   /trigger <номер> – принудительно вызвать триггер по номеру
   /settings – настроить чат
-  /settings <number> – настроить триггер по номеру
+  /edit <number> – настроить триггер по номеру
 
 callbacks:
   lang:
@@ -26,9 +26,12 @@ callbacks:
       no_lang: Язык не найден!
 
   settings:
-    trigger:
-      responses:
-        not_found: Триггер не найден!
+    responses:
+      not_found: Триггер не найден!
+
+  edit:
+    responses:
+      not_found: Триггер не найден!
 
   auto_delete:
     responses:
@@ -108,43 +111,42 @@ commands:
       not_found: Триггер не найден!
 
   settings:
-    chat:
-      text: Настрой меня.
-      done: Настройки сохранены.
-      buttons:
-        only_admins: "{indicator} Только для админов"
-        change_lang: Сменить язык
-        done: Готово
-      indicators:
-        on:  ✅
-        off: ❌
-    trigger:
-      text: |-
-        Настрой триггер {index}:
+    text: Настрой меня.
+    done: Настройки сохранены.
+    buttons:
+      only_admins: "{indicator} Только для админов"
+      change_lang: Сменить язык
+      done: Готово
+    indicators:
+      on:  ✅
+      off: ❌
+  edit:
+    text: |-
+      Отредактируй триггер {index}:
 
-        {factor}
-      text_action: Настрой триггер {index}.
-      done: Триггер сохранён.
-      responses:
-        not_found: Триггер не найден!
-      buttons:
-        reply: "{indicator} Ответом"
-        full_factor: "{indicator} Полное сообщение"
-        strict_case: "{indicator} Строгий регистр"
-        auto_delete: "Автоудаление"
-        done: Готово
-      indicators:
-        on:  ✅
-        off: ❌
-    auto_delete:
-      text: Выбери паузу перед удалением поста.
-      variants:
-        0:    "Не удалять"
-        2:    "2с"
-        5:    "5с"
-        10:   "10с"
-        20:   "20с"
-        60:   "1м"
-        300:  "5м"
-        1200: "20м"
-        3600: "60м"
+      {factor}
+    text_action: Отредактируй триггер {index}.
+    done: Триггер сохранён.
+    responses:
+      not_found: Триггер не найден!
+    buttons:
+      reply: "{indicator} Ответом"
+      full_factor: "{indicator} Полное сообщение"
+      strict_case: "{indicator} Строгий регистр"
+      auto_delete: "Автоудаление"
+      done: Готово
+    indicators:
+      on:  ✅
+      off: ❌
+  auto_delete:
+    text: Выбери паузу перед удалением поста.
+    variants:
+      0:    "Не удалять"
+      2:    "2с"
+      5:    "5с"
+      10:   "10с"
+      20:   "20с"
+      60:   "1м"
+      300:  "5м"
+      1200: "20м"
+      3600: "60м"

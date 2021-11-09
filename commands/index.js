@@ -5,5 +5,6 @@ module.exports = {
 	onleft:   require("./onleft"),
 	list:     require("./list"),
 	trigger:  require("./trigger"),
-	settings: require("./settings")
+	settings: require("./settings"),
+	edit:     require("./edit")
 };

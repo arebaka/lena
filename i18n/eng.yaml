@@ -18,7 +18,7 @@ list_of_commands: |-
   /list – get all active triggers
   /trigger <number> – invoke active trigger by number forcibly
   /settings – configure the chat
-  /settings <number> – configure the trigger by number
+  /edit <number> – configure the trigger by number
 
 callbacks:
   lang:
@@ -26,9 +26,12 @@ callbacks:
       no_lang: The lang not found!
 
   settings:
-    trigger:
-      responses:
-        not_found: The trigger not found!
+    responses:
+      not_found: The trigger not found!
+
+  edit:
+    responses:
+      not_found: The trigger not found!
 
   auto_delete:
     responses:
@@ -108,43 +111,42 @@ commands:
       not_found: The trigger not found!
 
   settings:
-    chat:
-      text: Setting me.
-      done: Settings were saved.
-      buttons:
-        only_admins: "{indicator} Only for admins"
-        change_lang: Change the lang
-        done: Done
-      indicators:
-        on:  ✅
-        off: ❌
-    trigger:
-      text: |-
-        Setting the trigger {index}:
+    text: Setting me.
+    done: Settings were saved.
+    buttons:
+      only_admins: "{indicator} Only for admins"
+      change_lang: Change the lang
+      done: Done
+    indicators:
+      on:  ✅
+      off: ❌
+  edit:
+    text: |-
+      Edit the trigger {index}:
 
-        {factor}
-      text_actions: Setting the trigger {index}.
-      done: The trigger was saved.
-      responses:
-        not_found: The trigger not found!
-      buttons:
-        reply: "{indicator} Reply"
-        full_factor: "{indicator} Full message"
-        strict_case: "{indicator} Strict case"
-        auto_delete: "Auto-delete"
-        done: Done
-      indicators:
-        on:  ✅
-        off: ❌
-    auto_delete:
-      text: Select a delay before post will be deleted.
-      variants:
-        0:    "Dont delete"
-        2:    "2s"
-        5:    "5s"
-        10:   "10s"
-        20:   "20s"
-        60:   "1m"
-        300:  "5m"
-        1200: "20m"
-        3600: "60m"
+      {factor}
+    text_actions: Edit the trigger {index}.
+    done: The trigger was saved.
+    responses:
+      not_found: The trigger not found!
+    buttons:
+      reply: "{indicator} Reply"
+      full_factor: "{indicator} Full message"
+      strict_case: "{indicator} Strict case"
+      auto_delete: "Auto-delete"
+      done: Done
+    indicators:
+      on:  ✅
+      off: ❌
+  auto_delete:
+    text: Select a delay before post will be deleted.
+    variants:
+      0:    "Dont delete"
+      2:    "2s"
+      5:    "5s"
+      10:   "10s"
+      20:   "20s"
+      60:   "1m"
+      300:  "5m"
+      1200: "20m"
+      3600: "60m"

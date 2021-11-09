@@ -65,6 +65,7 @@ class Bot
             switch (data[0]) {
                 case "lang":        return callbacks.lang(ctx, data);
                 case "settings":    return callbacks.settings(ctx, data);
+                case "edit":        return callbacks.edit(ctx, data);
                 case "auto_delete": return callbacks.autoDelete(ctx, data);
                 default:            return ctx.answerCbQuery(ctx.chat._.errors.unknown_callback, true);
             }
@@ -86,6 +87,7 @@ class Bot
         this.bot.command("list",     commands.list);
         this.bot.command("trigger",  commands.trigger);
         this.bot.command("settings", commands.settings);
+        this.bot.command("edit",     commands.edit);
 
         this.bot.on("text", async ctx => {
             const text = ctx.message.text
