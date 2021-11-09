@@ -57,6 +57,8 @@ commands:
       factor_is_required: A factor for the trigger is required!
       factor_is_too_long: The factor cannot exceed {length} characters!
       cannot: Cannot add the trigger!
+    buttons:
+      edit: Edit
 
   off:
     responses:
@@ -67,11 +69,15 @@ commands:
     responses:
       ok: The trigger {index} was added.
       cannot: Cannot add the trigger!
+    buttons:
+      edit: Edit
 
   onleft:
     responses:
       ok: The trigger {index} was added.
       cannot: Cannot add the trigger!
+    buttons:
+      edit: Edit
 
   list:
     emoji:

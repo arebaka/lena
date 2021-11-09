@@ -12,8 +12,14 @@ module.exports = async ctx => {
 
     const trigger = await bind(ctx.message.reply_to_message, ctx.from.id, true, "join");
 
-    ctx.replyWithMarkdown(trigger
-        ? _.responses.ok.replace("{index}", trigger.index)
-        : _.responses.cannot
-    );
+    const markup = Markup.inlineKeyboard([[
+        Markup.button.callback(
+            _.buttons.edit,
+            `edit:${trigger.index}`
+        )
+    ]]);
+
+    trigger
+        ? ctx.replyWithMarkdown(_.responses.ok.replace("{index}", trigger.index), markup)
+        : ctx.replyWithMarkdown(_.responses.cannot);
 };

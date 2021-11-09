@@ -57,6 +57,8 @@ commands:
       factor_is_required: Необходимо прописать фактор!
       factor_is_too_long: Фактор не может превышать длину {length} символов!
       cannot: Невозможно добавить триггер!
+    buttons:
+      edit: Редактировать
 
   off:
     responses:
@@ -67,11 +69,15 @@ commands:
     responses:
       ok: Триггер {index} добавлен.
       cannot: Невозможно добавить триггер!
+    buttons:
+      edit: Редактировать
 
   onleft:
     responses:
       ok: Триггер {index} добавлен.
       cannot: Невозможно добавить триггер!
+    buttons:
+      edit: Редактировать
 
   list:
     emoji:

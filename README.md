@@ -10,7 +10,6 @@
 ![](https://img.shields.io/badge/English-100%25-brightgreen)
 ![](https://img.shields.io/badge/Russian-100%25-brightgreen)
 
-
 ## Commands
 `/on <text>` – create a trigger on text  
 `/on <"text">` – create a trigger on full message text  
