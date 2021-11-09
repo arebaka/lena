@@ -244,21 +244,23 @@ class DBHelper
                 where chat_id = $1
                 and action = false
                 and (
-                    $2 like '%' || factor || '%'
-                    and full_factor = false
-                    and strict_case = true
-                ) or (
-                    $3 like '%' || LOWER(factor) || '%'
-                    and full_factor = false
-                    and strict_case = false
-                ) or (
-                    factor = $2
-                    and full_factor = true
-                    and strict_case = true
-                ) or (
-                    LOWER(factor) = $3
-                    and full_factor = true
-                    and strict_case = false
+                    (
+                        $2 like '%' || factor || '%'
+                        and full_factor = false
+                        and strict_case = true
+                    ) or (
+                        $3 like '%' || LOWER(factor) || '%'
+                        and full_factor = false
+                        and strict_case = false
+                    ) or (
+                        factor = $2
+                        and full_factor = true
+                        and strict_case = true
+                    ) or (
+                        LOWER(factor) = $3
+                        and full_factor = true
+                        and strict_case = false
+                    )
                 )
             `, [
                 chatId, text, lower
