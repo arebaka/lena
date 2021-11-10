@@ -1,11 +1,12 @@
+const dayjs = require("dayjs");
+
 function substitute(ctx, text, entities)
 {
-    let chars = [...text];
     let res   = "";
     let stack = [];
     let tag;
 
-    for (let i = 0; i < chars.length; i++) {
+    for (let i = 0; i < text.length; i++) {
         for (let entity of entities.filter(e => e.offset + e.length == i)) {
             tag = {
                 bold:         "</b>",
@@ -39,11 +40,11 @@ function substitute(ctx, text, entities)
             res += tag;
         }
 
-        if (chars[i] == '&') chars[i] = '&amp;';
-        if (chars[i] == '<') chars[i] = '&lt;';
-        if (chars[i] == '<') chars[i] = '&gt;';
+        if (text[i] == '&') text[i] = '&amp;';
+        if (text[i] == '<') text[i] = '&lt;';
+        if (text[i] == '<') text[i] = '&gt;';
 
-        res += chars[i];
+        res += text[i];
     }
 
     res = res.replace(/\{chat\}/g, ctx.chat.title || ctx.from.first_name);
@@ -59,9 +60,11 @@ function substitute(ctx, text, entities)
         : `<a href="tg://user?id=${ctx.from.id}">${ctx.from.first_name}</a>`);
     res = res.replace(/\{userid\}/g, ctx.from.id);
 
-//    res = res.replace(/\{date\}/g, dateformat(ctx.message.date, ctx.chat._.locale.date));
-//    res = res.replace(/\{time\}/g, dateformat(ctx.message.date, ctx.chat._.locale.time));
-//    res = res.replace(/\{datetime\}/g, dateformat(ctx.message.date, ctx.chat._.locale.datetime));
+    let date = dayjs.unix(ctx.message.date);
+
+    res = res.replace(/\{date\}/g, date.format(ctx.chat._.locale.date));
+    res = res.replace(/\{time\}/g, date.format(ctx.chat._.locale.time));
+    res = res.replace(/\{datetime\}/g, date.format(ctx.chat._.locale.datetime));
 
     res = res.replace(/\{message\}/g, ctx.message.text);
     res = res.replace(/\{messid\}/g, ctx.message.message_id);

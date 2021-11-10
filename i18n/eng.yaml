@@ -1,6 +1,11 @@
 ---
 name: Lena
 
+locale:
+  date: MM/DD/YYYY
+  time: h:mm A
+  datetime: MM/DD/YYYY h:mm A
+
 errors:
   default: Something went wrong!
   command_only_in_groups: The command is only available in groups!

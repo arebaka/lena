@@ -1,6 +1,11 @@
 ---
 name: Лена
 
+locale:
+  date: DD.MM.YYYY
+  time: HH:mm
+  datetime: DD.MM.YYYY HH:mm
+
 errors:
   default: Что то пошло не так!
   command_only_in_groups: Команда доступна только в группах!
