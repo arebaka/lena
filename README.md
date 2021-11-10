@@ -6,6 +6,7 @@
 ![](https://img.shields.io/tokei/lines/github/arebaka/lena)
 ![](https://img.shields.io/github/repo-size/arebaka/lena)
 ![](https://img.shields.io/npm/v/lenabot)
+![](https://img.shields.io/codefactor/grade/github/arebaka/lena)
 
 ![](https://img.shields.io/badge/English-100%25-brightgreen)
 ![](https://img.shields.io/badge/Russian-100%25-brightgreen)
@@ -62,7 +63,7 @@ The bot requires some environment variables. Here is a list of them:
 `TOKEN` – bot token from @BotFather  
 `DBURI` – URI-string for connection to PSQL in format `postgres://<USER>:<PASSWORD>@<HOST>/<DATABASE>:<PORT>`
 
-Instead of the environment you can set launch parameters in a file config.toml.
+Instead of the environment you can set launch parameters in a file `config.toml`.
 
 After setup the environment run
 ```bash
