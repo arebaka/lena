@@ -7,7 +7,7 @@ function substitute(ctx, text, entities)
     let tag;
 
     for (let i = 0; i < text.length; i++) {
-        for (let entity of entities.filter(e => e.offset + e.length == i)) {
+        for (let j in entities.filter(e => e.offset + e.length == i)) {
             tag = stack.pop();
             res += tag ? `</${tag.split(' ')[0]}>` : "";
         }
@@ -25,7 +25,7 @@ function substitute(ctx, text, entities)
                     text_link:    `a href="${entity.url}"`
                 }[entity.type];
 
-            stack.push(entity.type);
+            stack.push(tag);
             res += tag ? `<${tag}>` : "";
         }
 

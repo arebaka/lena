@@ -1,3 +1,5 @@
+const Markup = require("telegraf").Markup;
+
 const db   = require("../db");
 const bind = require("../bind");
 

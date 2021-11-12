@@ -10,9 +10,8 @@ module.exports = async (ctx, data) => {
     const prop  = data[2];
     const value = data[3];
 
-    let _ = ctx.chat._.commands.edit;
-    let markup;
-
+    let   markup;
+    let   _       = ctx.chat._.commands.edit;
     const trigger = await db.getTrigger(ctx.chat.id, index);
 
     if (!trigger)
@@ -54,9 +53,13 @@ module.exports = async (ctx, data) => {
                 return ctx.answerCbQuery(ctx.chat._.errors.unknown_callback, true);
         }
     }
+    else if (trigger.action) {
+        markup = Markup.inlineKeyboard([
+            [Markup.button.callback(_.buttons.auto_delete, `edit:${trigger.index}:auto_delete`)],
+            [Markup.button.callback(_.buttons.done, `edit:${trigger.index}:done`)]
+        ]);
+    }
     else {
-        _ = ctx.chat._.commands.edit;
-
         markup = Markup.inlineKeyboard([
             [Markup.button.callback(
                 _.buttons.reply
@@ -78,10 +81,10 @@ module.exports = async (ctx, data) => {
 
             [Markup.button.callback(_.buttons.done, `edit:${trigger.index}:done`)]
         ]);
-
-        ctx.editMessageText(_.text
-                .replace("{index}", index)
-                .replace("{factor}", trigger.factor),
-            markup);
     }
+
+    ctx.editMessageText(_.text
+            .replace("{index}", index)
+            .replace("{factor}", trigger.factor),
+        markup);
 };
