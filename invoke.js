@@ -8,43 +8,37 @@ function substitute(ctx, text, entities)
 
     for (let i = 0; i < text.length; i++) {
         for (let entity of entities.filter(e => e.offset + e.length == i)) {
-            tag = {
-                bold:         "</b>",
-                italic:       "</i>",
-                underline:    "</u>",
-                striketrough: "</s>",
-                code:         "</code>",
-                pre:          "</pre>",
-                mention:      "",
-                url:          "",
-                text_link:    "</a>"
-            }[stack.pop()];
-
-            res += tag;
+            tag = stack.pop();
+            res += tag ? `</${tag.split(' ')[0]}>` : "";
         }
 
         for (let entity of entities.filter(e => e.offset == i)) {
             tag = {
-                bold:         "<b>",
-                italic:       "<i>",
-                underline:    "<u>",
-                striketrough: "<s>",
-                code:         "<code>",
-                pre:          "<pre>",
-                mention:      "",
-                url:          "",
-                text_link:    `<a href="${entity.url}">`
-            }[entity.type];
+                    bold:         "b",
+                    italic:       "i",
+                    underline:    "u",
+                    striketrough: "s",
+                    code:         "code",
+                    pre:          "pre",
+                    mention:      null,
+                    url:          null,
+                    text_link:    `a href="${entity.url}"`
+                }[entity.type];
 
             stack.push(entity.type);
-            res += tag;
+            res += tag ? `<${tag}>` : "";
         }
 
-        if (text[i] == '&') text[i] = '&amp;';
-        if (text[i] == '<') text[i] = '&lt;';
-        if (text[i] == '<') text[i] = '&gt;';
+        if (text[i] == '&') text[i] = "&amp;";
+        if (text[i] == '<') text[i] = "&lt;";
+        if (text[i] == '<') text[i] = "&gt;";
 
         res += text[i];
+    }
+
+    while (stack.length) {
+        tag = stack.pop();
+        res += tag ? `</${tag.split(' ')[0]}>` : "";
     }
 
     res = res.replace(/\{chat\}/g, ctx.chat.title || ctx.from.first_name);
