@@ -16,7 +16,7 @@ const i18n      = require("./i18n");
 
 class Bot
 {
-    constructor(token, username)
+    constructor(token)
     {
         this.token    = token;
         this.username = null;

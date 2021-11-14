@@ -8,7 +8,6 @@ const FACTOR_MAX_LENGTH = 255;
 module.exports = async ctx => {
     const _          = ctx.chat._.commands.on;
     const chat       = await db.getChat(ctx.chat.id);
-    let   fullFactor = false;
     let   factor     = ctx.message.text
         .trim().split(' ').slice(1).join(' ');
 
@@ -23,14 +22,8 @@ module.exports = async ctx => {
             .replace("{length}", FACTOR_MAX_LENGTH
         ));
 
-    if (factor.length > 1 && factor.startsWith('"') && factor.endsWith('"')) {
-        factor     = factor.substring(1, factor.length - 1);
-        fullFactor = true;
-    }
-
-    const trigger = await bind(ctx.message.reply_to_message, ctx.from.id, false, factor, fullFactor);
-
-    const markup = Markup.inlineKeyboard([[
+    const trigger = await bind(ctx.message.reply_to_message, ctx.from.id, false, factor, false);
+    const markup  = Markup.inlineKeyboard([[
         Markup.button.callback(
             _.buttons.edit,
             `edit:${trigger.index}`

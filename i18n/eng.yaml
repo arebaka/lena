@@ -16,7 +16,6 @@ errors:
 
 list_of_commands: |-
   /on <text> – create a trigger for text
-  /on "<text>" – create a trigger for full message text
   /off <number> – delete the trigger by number
   /onjoin – create a trigger for someone joins the chat
   /onleft – create a trigger for someone lefts the chat
