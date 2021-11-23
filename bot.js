@@ -7,6 +7,7 @@ const logger = require("./logger");
 const middlewares = require("./middlewares");
 const commands    = require("./commands");
 const handlers    = require("./handlers");
+const callbacks   = require("./callbacks");
 
 
 
@@ -35,7 +36,11 @@ class Bot
         this.bot.on("text",             handlers.text);
         this.bot.on("new_chat_members", handlers.new_chat_members);
         this.bot.on("left_chat_member", handlers.left_chat_member);
-        this.bot.on("callback_query",   handlers.callback_query);
+
+        this.bot.action(/^lang:([^:]+)$/,                callbacks.lang);
+        this.bot.action(/^settings:([^:]+)(:[^:]+)?$/,   callbacks.settings);
+        this.bot.action(/^edit:(\d+):([^:]+)(:[^:]+)?$/, callbacks.edit);
+        this.bot.action(/^auto_delete:(\d+):(\d+)$/,     callbacks.auto_delete);
     }
 
     async start()

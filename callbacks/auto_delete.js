@@ -2,12 +2,9 @@ const Markup = require("telegraf").Markup;
 
 const db = require("../db");
 
-module.exports = async (ctx, data) => {
-    if (!/^\d+$/.test(data[1]))
-        return ctx.answerCbQuery(ctx.chat._.errors.trigger_number_is_required, true);
-
-    const index = parseInt(data[1]);
-    const value = parseInt(data[2]);
+module.exports = async ctx => {
+    const index = parseInt(ctx.match[1]);
+    const value = parseInt(ctx.match[2]);
 
     let _ = ctx.chat._.callbacks.auto_delete;
 

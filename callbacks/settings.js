@@ -2,9 +2,9 @@ const Markup = require("telegraf").Markup;
 
 const db = require("../db");
 
-module.exports = async (ctx, data) => {
-    const prop  = data[1];
-    const value = data[2];
+module.exports = async ctx => {
+    const prop  = ctx.match[1];
+    const value = ctx.match[2] ? ctx.match[2].slice(1) : null;
 
     let _      = ctx.chat._.commands.settings;
     let markup = ctx.update.callback_query.message.reply_markup;

@@ -2,13 +2,10 @@ const Markup = require("telegraf").Markup;
 
 const db = require("../db");
 
-module.exports = async (ctx, data) => {
-    if (!/^\d+$/.test(data[1]))
-        return ctx.answerCbQuery(ctx.chat._.errors.trigger_number_is_required, true);
-
-    const index = parseInt(data[1]);
-    const prop  = data[2];
-    const value = data[3];
+module.exports = async ctx => {
+    const index = parseInt(ctx.match[1]);
+    const prop  = ctx.match[2];
+    const value = ctx.match[3] ? ctx.match[3].slice(1) : null;
 
     let   markup;
     let   _       = ctx.chat._.commands.edit;
