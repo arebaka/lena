@@ -1,15 +1,12 @@
-const path = require("path");
-const fs   = require("fs");
-
-const { Telegraf, Markup } = require("telegraf");
+const Telegraf = require("telegraf").Telegraf;
 
 const db     = require("./db");
 const config = require("./config");
-const invoke = require("./invoke");
+const logger = require("./logger");
 
-const commands  = require("./commands");
-const callbacks = require("./callbacks");
-const i18n      = require("./i18n");
+const middlewares = require("./middlewares");
+const commands    = require("./commands");
+const handlers    = require("./handlers");
 
 
 
@@ -22,63 +19,9 @@ class Bot
         this.username = null;
         this.bot      = new Telegraf(this.token);
 
-        this.bot.use(async (ctx, next) => {
-            try {
-                ctx.from && await db.setUser(
-                    ctx.from.id, ctx.from.username, ctx.from.first_name, ctx.from.last_name
-                );
+        this.bot.use(middlewares.update);
 
-                if (ctx.chat) {
-                    const lang = await db.setChat(
-                        ctx.chat.id, ctx.chat.username,
-                        ctx.chat.title || ctx.chat.first_name
-                    );
-                    ctx.chat._ = i18n[lang];
-
-                    if (ctx.chat.type != "private") {
-                        await this.bot.telegram.getChatAdministrators(ctx.chat.id)
-                            .then(admins => {
-                                ctx.chat.admins  = admins;
-                                ctx.from.isAdmin = admins.some(admin => admin.user.id == ctx.from.id);
-                            })
-                            .catch(err => {});
-                    }
-                }
-                else {
-                    ctx.chat = {
-                        _: i18n.eng
-                    };
-                }
-
-                await next();
-            }
-            catch (err) {
-                console.error(err);
-                ctx.replyWithMarkdown(ctx.chat._ ? ctx.chat._.errors.default : "Что то пошло не так!");
-            }
-        });
-
-        this.bot.on("callback_query", async ctx => {
-            const query = ctx.update.callback_query;
-            const data  = query.data.split(':');
-
-            switch (data[0]) {
-                case "lang":        return callbacks.lang(ctx, data);
-                case "settings":    return callbacks.settings(ctx, data);
-                case "edit":        return callbacks.edit(ctx, data);
-                case "auto_delete": return callbacks.autoDelete(ctx, data);
-                default:            return ctx.answerCbQuery(ctx.chat._.errors.unknown_callback, true);
-            }
-        });
-
-        this.bot.start(async ctx => {
-            const markup = Markup.inlineKeyboard([
-                    Markup.button.callback("English", "lang:eng"),
-                    Markup.button.callback("Русский", "lang:rus")
-                ]);
-
-            ctx.replyWithMarkdown("Choose the language\nВыберите язык", markup);
-        });
+        this.bot.start(commands.start);
 
         this.bot.command("on",       commands.on);
         this.bot.command("off",      commands.off);
@@ -89,36 +32,10 @@ class Bot
         this.bot.command("settings", commands.settings);
         this.bot.command("edit",     commands.edit);
 
-        this.bot.on("text", async ctx => {
-            const text = ctx.message.text
-                .trim().split(/\s+/g).join(' ');
-
-            const chat     = await db.getChat(ctx.chat.id);
-            const triggers = await db.findTriggers(ctx.chat.id, text, text.toLowerCase());
-
-            for (let trigger of triggers) {
-                trigger = await db.getTrigger(ctx.chat.id, trigger);
-                await invoke(ctx, trigger);
-            }
-        });
-
-        this.bot.on("new_chat_members", async ctx => {
-            const triggers = await db.getActionTriggers(ctx.chat.id, "join");
-
-            for (let trigger of triggers) {
-                trigger = await db.getTrigger(ctx.chat.id, trigger);
-                await invoke(ctx, trigger);
-            }
-        });
-
-        this.bot.on("left_chat_member", async ctx => {
-            const triggers = await db.getActionTriggers(ctx.chat.id, "left");
-
-            for (let trigger of triggers) {
-                trigger = await db.getTrigger(ctx.chat.id, trigger);
-                await invoke(ctx, trigger);
-            }
-        });
+        this.bot.on("text",             handlers.text);
+        this.bot.on("new_chat_members", handlers.new_chat_members);
+        this.bot.on("left_chat_member", handlers.left_chat_member);
+        this.bot.on("callback_query",   handlers.callback_query);
     }
 
     async start()
@@ -129,27 +46,29 @@ class Bot
             .launch(config.params)
             .then(res => {
                 this.username = this.bot.botInfo.username;
-                console.log(`Bot @${this.username} started.`);
+                logger.info(`Bot @${this.username} started.`);
             })
             .catch(err => {
-                console.error(err);
-                this.bot.stop();
+                logger.error(err);
             });
     }
 
     async stop()
     {
-        console.log(`Stop the bot @${this.username}`);
+        logger.info(`Stop the bot @${this.username}`);
 
-        this.bot.stop();
+        await this.bot.stop();
         await db.stop();
+
+        process.exit(0);
     }
 
     async reload()
     {
-        console.log(`Reload the bot @${this.username}`);
+        logger.info(`Reload the bot @${this.username}`);
 
-        await this.stop();
+        await this.bot.stop();
+        await db.stop();
         await this.start();
     }
 }
