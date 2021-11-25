@@ -39,7 +39,7 @@ class Bot
 
         this.bot.action(/^lang:([^:]+)$/,                callbacks.lang);
         this.bot.action(/^settings:([^:]+)(:[^:]+)?$/,   callbacks.settings);
-        this.bot.action(/^edit:(\d+):([^:]+)(:[^:]+)?$/, callbacks.edit);
+        this.bot.action(/^edit:(\d+)(:[^:]+)?(:[^:]+)?$/, callbacks.edit);
         this.bot.action(/^auto_delete:(\d+):(\d+)$/,     callbacks.auto_delete);
     }
 

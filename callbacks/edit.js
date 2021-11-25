@@ -4,7 +4,7 @@ const db = require("../db");
 
 module.exports = async ctx => {
     const index = parseInt(ctx.match[1]);
-    const prop  = ctx.match[2];
+    const prop  = ctx.match[2] ? ctx.match[2].slice(1) : null;
     const value = ctx.match[3] ? ctx.match[3].slice(1) : null;
 
     let   markup;

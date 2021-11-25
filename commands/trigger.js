@@ -5,7 +5,7 @@ module.exports = async ctx => {
     const _     = ctx.chat._.commands.trigger;
     const chat  = await db.getChat(ctx.chat.id);
     const index = ctx.message.text
-        .trim().split(' ').slice(1).join(' ');
+        .trim().split(/\s+/).slice(1).join(' ');
 
     if (ctx.chat.type != "private" && !ctx.from.isAdmin && chat.only_admins)
         return ctx.replyWithMarkdown(ctx.chat._.errors.command_only_for_admins);

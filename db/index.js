@@ -3,6 +3,7 @@ const fs   = require("fs");
 const pg   = require("pg");
 
 const config = require("../config");
+const logger = require("../logger");
 
 
 
@@ -44,7 +45,7 @@ class DBHelper
         });
 
         this.pool.on("error", async (err, client) => {
-            console.error("PostgreSQL pool is down!", err);
+            logger.fatal(err, "PostgreSQL");
             await this.pool.end();
             process.exit(-1);
         });

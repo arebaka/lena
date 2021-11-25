@@ -3,7 +3,7 @@ const db = require("../db");
 module.exports = async ctx => {
     const _     = ctx.chat._.commands.off;
     const index = ctx.message.text
-        .trim().split(' ').slice(1).join(' ');
+        .trim().split(/\s+/).slice(1).join(' ');
 
     if (!/^\d+$/.test(index))
         return ctx.replyWithMarkdown(ctx.chat._.errors.trigger_number_is_required);

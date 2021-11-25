@@ -6,7 +6,7 @@ module.exports = async ctx => {
     let   markup;
     let   _     = ctx.chat._.commands.edit;
     const index = ctx.message.text
-        .trim().split(' ').slice(1).join(' ');
+        .trim().split(/\s/).slice(1).join(' ');
 
     if (!/^\d+$/.test(index))
         return ctx.replyWithMarkdown(ctx.chat._.errors.trigger_number_is_required);

@@ -6,10 +6,9 @@ const bind = require("../bind");
 const FACTOR_MAX_LENGTH = 255;
 
 module.exports = async ctx => {
-    const _          = ctx.chat._.commands.on;
-    const chat       = await db.getChat(ctx.chat.id);
-    let   factor     = ctx.message.text
-        .trim().split(' ').slice(1).join(' ');
+    const _      = ctx.chat._.commands.on;
+    const chat   = await db.getChat(ctx.chat.id);
+    let   factor = ctx.message.text.replace(/^\/on\s+/, "");
 
     if (ctx.chat.type != "private" && !ctx.from.isAdmin && chat.only_admins)
         return ctx.replyWithMarkdown(ctx.chat._.errors.command_only_for_admins);
