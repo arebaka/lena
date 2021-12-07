@@ -1,6 +1,6 @@
 {
   "name": "lenabot",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "a trigger bot for Telegram chats configurable by admins",
   "bin": "./start.sh",
   "main": "index.js",
@@ -52,7 +52,7 @@
     "i18n/*"
   ],
   "dependencies": {
-    "@arelive/logger": "^1.0.0",
+    "@arelive/logger": "^1.1.1",
     "dayjs": "^1.10.7",
     "pg": "^8.6.0",
     "serverline": "^1.5.0",

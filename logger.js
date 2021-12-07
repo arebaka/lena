@@ -1,2 +1,2 @@
-let logger = require("@arelive/logger");
-module.exports = new logger.Logger();
+let Logger = require("@arelive/logger");
+module.exports = new Logger({ format: "short" });
