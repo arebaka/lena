@@ -1,123 +1,123 @@
 CREATE TYPE mess_type AS ENUM (
-    'text',
-    'animation',
-    'audio',
-    'dice',
-    'document',
-    'game',
-    'invoice',
-    'location',
-    'photo',
-    'poll',
-    'quiz',
-    'sticker',
-    'video',
-    'videonote',
-    'voice'
+	'text',
+	'animation',
+	'audio',
+	'dice',
+	'document',
+	'game',
+	'invoice',
+	'location',
+	'photo',
+	'poll',
+	'quiz',
+	'sticker',
+	'video',
+	'videonote',
+	'voice'
 );
 
 CREATE TYPE poll_type AS ENUM (
-    'regular',
-    'quiz'
+	'regular',
+	'quiz'
 );
 
 CREATE TYPE entity_type AS ENUM (
-    'bold',
-    'italic',
-    'underline',
-    'striketrough',
-    'code',
-    'pre',
-    'mention',
-    'url',
-    'text_link'
+	'bold',
+	'italic',
+	'underline',
+	'striketrough',
+	'code',
+	'pre',
+	'mention',
+	'url',
+	'text_link'
 );
 
 CREATE TABLE IF NOT EXISTS public.users (
-    id bigint NOT NULL PRIMARY KEY,
-    username character varying(32) DEFAULT NULL::character varying,
-    first_name character varying(256) NOT NULL,
-    last_name character varying(256) DEFAULT NULL::character varying
+	id bigint NOT NULL PRIMARY KEY,
+	username character varying(32) DEFAULT NULL::character varying,
+	first_name character varying(256) NOT NULL,
+	last_name character varying(256) DEFAULT NULL::character varying
 );
 
 CREATE TABLE IF NOT EXISTS public.chats (
-    id bigint NOT NULL PRIMARY KEY,
-    username character varying(32) DEFAULT NULL::character varying,
-    title character varying(255) NOT NULL,
-    last_trigger_index int DEFAULT 0 NOT NULL,
-    lang character(3) DEFAULT 'eng' NOT NULL,
-    only_admins boolean DEFAULT true NOT NULL
+	id bigint NOT NULL PRIMARY KEY,
+	username character varying(32) DEFAULT NULL::character varying,
+	title character varying(255) NOT NULL,
+	last_trigger_index int DEFAULT 0 NOT NULL,
+	lang character(3) DEFAULT 'eng' NOT NULL,
+	only_admins boolean DEFAULT true NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.triggers (
-    id bigserial NOT NULL PRIMARY KEY,
-    chat_id bigint NOT NULL,
-    creator_id bigint NOT NULL,
-    index integer NOT NULL,
-    type mess_type NOT NULL,
-    action boolean DEFAULT false NOT NULL,
-    factor character varying(255) NOT NULL,
-    full_factor boolean NOT NULL,
-    strict_case boolean NOT NULL,
-    auto_delete int DEFAULT 0 NOT NULL,
-    reply boolean DEFAULT false NOT NULL
+	id bigserial NOT NULL PRIMARY KEY,
+	chat_id bigint NOT NULL,
+	creator_id bigint NOT NULL,
+	index integer NOT NULL,
+	type mess_type NOT NULL,
+	action boolean DEFAULT false NOT NULL,
+	factor character varying(255) NOT NULL,
+	full_factor boolean NOT NULL,
+	strict_case boolean NOT NULL,
+	auto_delete int DEFAULT 0 NOT NULL,
+	reply boolean DEFAULT false NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.entities (
-    id bigserial NOT NULL PRIMARY KEY,
-    trigger_id bigint NOT NULL,
-    type entity_type NOT NULL,
-    "offset" integer NOT NULL,
-    length integer NOT NULL,
-    url character varying(4096) DEFAULT NULL::character varying
+	id bigserial NOT NULL PRIMARY KEY,
+	trigger_id bigint NOT NULL,
+	type entity_type NOT NULL,
+	"offset" integer NOT NULL,
+	length integer NOT NULL,
+	url character varying(4096) DEFAULT NULL::character varying
 );
 
 CREATE TABLE IF NOT EXISTS public.text_triggers (
-    id bigserial NOT NULL PRIMARY KEY,
-    trigger_id bigint NOT NULL,
-    text text NOT NULL
+	id bigserial NOT NULL PRIMARY KEY,
+	trigger_id bigint NOT NULL,
+	text text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.dice_triggers (
-    id bigserial NOT NULL PRIMARY KEY,
-    trigger_id bigint NOT NULL,
-    emoji character varying(32) NOT NULL
+	id bigserial NOT NULL PRIMARY KEY,
+	trigger_id bigint NOT NULL,
+	emoji character varying(32) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.location_triggers (
-    id bigserial NOT NULL PRIMARY KEY,
-    trigger_id bigint NOT NULL,
-    coords point NOT NULL
+	id bigserial NOT NULL PRIMARY KEY,
+	trigger_id bigint NOT NULL,
+	coords point NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.file_triggers (
-    id bigserial NOT NULL PRIMARY KEY,
-    trigger_id bigint NOT NULL,
-    fileid character varying(255) NOT NULL,
-    caption text DEFAULT NULL
+	id bigserial NOT NULL PRIMARY KEY,
+	trigger_id bigint NOT NULL,
+	fileid character varying(255) NOT NULL,
+	caption text DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.game_triggers (
-    id bigserial NOT NULL PRIMARY KEY,
-    trigger_id bigint NOT NULL,
-    name character varying(255) NOT NULL
+	id bigserial NOT NULL PRIMARY KEY,
+	trigger_id bigint NOT NULL,
+	name character varying(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.poll_triggers (
-    id bigserial NOT NULL PRIMARY KEY,
-    trigger_id bigint NOT NULL,
-    type poll_type DEFAULT 'regular'::poll_type NOT NULL,
-    question character varying(255) NOT NULL,
-    anon boolean DEFAULT false NOT NULL,
-    multiple_answers boolean DEFAULT false NOT NULL,
-    correct_option_index int DEFAULT NULL,
-    explanation character varying(255) DEFAULT NULL
+	id bigserial NOT NULL PRIMARY KEY,
+	trigger_id bigint NOT NULL,
+	type poll_type DEFAULT 'regular'::poll_type NOT NULL,
+	question character varying(255) NOT NULL,
+	anon boolean DEFAULT false NOT NULL,
+	multiple_answers boolean DEFAULT false NOT NULL,
+	correct_option_index int DEFAULT NULL,
+	explanation character varying(255) DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.poll_options (
-    id bigserial NOT NULL PRIMARY KEY,
-    poll_id bigint NOT NULL,
-    text character varying(255)
+	id bigserial NOT NULL PRIMARY KEY,
+	poll_id bigint NOT NULL,
+	text character varying(255)
 );
 
 CREATE INDEX IF NOT EXISTS users_first_name_index         ON public.users    USING btree (first_name);
