@@ -5,9 +5,6 @@ const pg   = require("pg");
 const config = require("../config");
 const logger = require("../logger");
 
-
-
-
 class DBHelper
 {
 	async _addTrigger(chatId, creatorId, action, factor, fullFactor, strictCase, autoDelete, reply, type)
@@ -40,7 +37,7 @@ class DBHelper
 	{
 		const sql = fs.readFileSync(path.resolve("db/init.sql"), "utf8").split(';');
 		this.pool = new pg.Pool({
-			connectionString: config.dbUri,
+			connectionString: config.db.uri,
 			max:              1
 		});
 
@@ -409,8 +406,5 @@ class DBHelper
 		return trigger;
 	}
 }
-
-
-
 
 module.exports = new DBHelper();

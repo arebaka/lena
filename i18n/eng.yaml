@@ -42,6 +42,8 @@ callbacks:
       ok: The delay before delete was changed.
       invalid_value: Invalid value!
       not_found: The trigger not found!
+    buttons:
+      edit: Edit
 
 commands:
   start:

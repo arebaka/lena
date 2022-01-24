@@ -9,9 +9,6 @@ const commands    = require("./commands");
 const handlers    = require("./handlers");
 const callbacks   = require("./callbacks");
 
-
-
-
 module.exports = class Bot
 {
 	constructor(token)
@@ -47,7 +44,7 @@ module.exports = class Bot
 		await db.start();
 
 		this.bot
-			.launch(config.params)
+			.launch(config.bot.params)
 			.then(res => {
 				this.username = this.bot.botInfo.username;
 				logger.info(`Bot @${this.username} started.`);

@@ -1,5 +1,6 @@
 [bot]
 token  = ""
-db_uri = "postgres://localhost/lena"
+params = {}
 
-[params]
+[db]
+uri = "postgres://localhost/lena"

@@ -20,5 +20,12 @@ module.exports = async ctx => {
 
 	await db.setTriggerProp(ctx.chat.id, index, "auto_delete", value);
 
-	ctx.editMessageText(_.responses.ok);
+	const markup = Markup.inlineKeyboard([[
+		Markup.button.callback(
+			_.buttons.edit,
+			`edit:${trigger.index}`
+		)
+	]]);
+
+	ctx.editMessageText(_.responses.ok, markup);
 };

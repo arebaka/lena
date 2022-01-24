@@ -42,6 +42,8 @@ callbacks:
       ok: Пауза перед удалением изменена.
       invalid_value: Неверное значение!
       not_found: Триггер не найден!
+    buttons:
+      edit: Редактировать
 
 commands:
   start:

@@ -1,6 +1,6 @@
 {
   "name": "lenabot",
-  "version": "1.8.6",
+  "version": "1.9.0",
   "description": "a trigger bot for Telegram chats configurable by admins",
   "bin": "./start.sh",
   "main": "index.js",

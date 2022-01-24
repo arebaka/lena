@@ -12,7 +12,7 @@ module.exports = async ctx => {
 	const trigger = await db.getTrigger(ctx.chat.id, index);
 
 	if (!trigger)
-		return ctx.answerCbQuery(ctx.chat._.callbacks.edit.responses.not_found);
+		return ctx.answerCbQuery(ctx.chat._.callbacks.edit.responses.not_found, true);
 	if (ctx.chat.type != "private" && !ctx.from.isAdmin && ctx.from.id != trigger.creator_id)
 		return ctx.answerCbQuery(ctx.chat._.errors.command_only_for_admins, true);
 
