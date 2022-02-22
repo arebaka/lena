@@ -3,10 +3,12 @@ const Markup = require("telegraf").Markup;
 const db = require("../db");
 
 module.exports = async ctx => {
+	if (ctx.match && ctx.match[2] && ctx.match[2] != "@" + ctx.me) return;
+
 	let   markup;
 	let   _     = ctx.chat._.commands.edit;
-	const index = ctx.message.text
-		.trim().split(/\s/).slice(1).join(' ');
+	const index = ctx.match && ctx.match[1] ? ctx.match[1]
+		: ctx.message.text.trim().split(/\s/).slice(1).join(' ');
 
 	if (!/^\d+$/.test(index))
 		return ctx.replyWithMarkdown(ctx.chat._.errors.trigger_number_is_required);

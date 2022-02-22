@@ -14,7 +14,7 @@ module.exports = async ctx => {
 		return ctx.replyWithMarkdown(ctx.chat._.errors.command_only_for_admins);
 
 	for (let trigger of triggers) {
-		line = `${_.emoji[trigger.type]} ${trigger.index}: `;
+		line = `${_.emoji[trigger.type]} /${trigger.index}: `;
 
 		if (trigger.action) {
 			switch (trigger.factor) {

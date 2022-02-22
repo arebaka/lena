@@ -25,6 +25,8 @@ module.exports = class Bot
 			this.bot.command(command, commands[command]);
 		}
 
+		this.bot.hears(/^\/(\d+)(@[_a-zA-Z0-9]+)?$/, commands.edit);
+
 		for (let event of [
 			"text",
 			"new_chat_members",
