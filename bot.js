@@ -21,7 +21,16 @@ module.exports = class Bot
 
 		this.bot.start(commands.start);
 
-		for (let command of ["on", "off", "onjoin", "onleft", "list", "trigger", "settings", "edit"]) {
+		for (let command of [
+			"on",
+			"off",
+			"onjoin",
+			"onleft",
+			"list",
+			"trigger",
+			"settings",
+			"edit"
+		]) {
 			this.bot.command(command, commands[command]);
 		}
 
