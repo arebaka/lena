@@ -19,6 +19,7 @@ function substitute(ctx, text, entities)
 					underline:    "u",
 					striketrough: "s",
 					code:         "code",
+					spoiler:      "span class=\"tg-spoiler\"",
 					pre:          "pre",
 					mention:      null,
 					url:          null,

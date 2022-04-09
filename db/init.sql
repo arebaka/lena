@@ -27,6 +27,7 @@ CREATE TYPE entity_type AS ENUM (
 	'underline',
 	'striketrough',
 	'code',
+	'spoiler',
 	'pre',
 	'mention',
 	'url',

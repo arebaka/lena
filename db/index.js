@@ -299,8 +299,10 @@ class DBHelper
 	async addEntities(triggerId, entities)
 	{
 		for (let entity of entities) {
-			if (["bold", "italic", "underline", "striketrough","code", "pre", "mention", "url"]
-				.includes(entity.type)
+			if ([
+					"bold", "italic", "underline", "striketrough",
+					"code", "spoiler", "pre", "mention", "url"
+				].includes(entity.type)
 			) {
 				await this.pool.query(`
 						insert into entities (trigger_id, type, "offset", length)
